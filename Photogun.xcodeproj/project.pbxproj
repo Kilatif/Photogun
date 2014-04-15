@@ -20,8 +20,6 @@
 		5AF69CDD18F43FDD0048DF44 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CDC18F43FDD0048DF44 /* XCTest.framework */; };
 		5AF69CDE18F43FDD0048DF44 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CC318F43FDD0048DF44 /* Foundation.framework */; };
 		5AF69CDF18F43FDD0048DF44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CC718F43FDD0048DF44 /* UIKit.framework */; };
-		5AF69CE718F43FDD0048DF44 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5AF69CE518F43FDD0048DF44 /* InfoPlist.strings */; };
-		5AF69CE918F43FDD0048DF44 /* PhotogunTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AF69CE818F43FDD0048DF44 /* PhotogunTests.m */; };
 		5AF69CF318F443E10048DF44 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */; };
 		5AF69D3918F45F460048DF44 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69D3818F45F460048DF44 /* GLKit.framework */; };
 		5AF69D3B18F45F530048DF44 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69D3A18F45F530048DF44 /* OpenGLES.framework */; };
@@ -55,9 +53,6 @@
 		5AF69CD518F43FDD0048DF44 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5AF69CDB18F43FDD0048DF44 /* PhotogunTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhotogunTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AF69CDC18F43FDD0048DF44 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		5AF69CE418F43FDD0048DF44 /* PhotogunTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PhotogunTests-Info.plist"; sourceTree = "<group>"; };
-		5AF69CE618F43FDD0048DF44 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		5AF69CE818F43FDD0048DF44 /* PhotogunTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotogunTests.m; sourceTree = "<group>"; };
 		5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		5AF69D3818F45F460048DF44 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5AF69D3A18F45F530048DF44 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -93,7 +88,6 @@
 			isa = PBXGroup;
 			children = (
 				5AF69CC918F43FDD0048DF44 /* Photogun */,
-				5AF69CE218F43FDD0048DF44 /* PhotogunTests */,
 				5AF69CC218F43FDD0048DF44 /* Frameworks */,
 				5AF69CC118F43FDD0048DF44 /* Products */,
 			);
@@ -144,24 +138,6 @@
 				5AF69CD118F43FDD0048DF44 /* Photogun-Prefix.pch */,
 				5AE9A18C18F8485A003D03ED /* test_image.jpg */,
 				5AE9A18E18F86882003D03ED /* test_image2.jpg */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		5AF69CE218F43FDD0048DF44 /* PhotogunTests */ = {
-			isa = PBXGroup;
-			children = (
-				5AF69CE818F43FDD0048DF44 /* PhotogunTests.m */,
-				5AF69CE318F43FDD0048DF44 /* Supporting Files */,
-			);
-			path = PhotogunTests;
-			sourceTree = "<group>";
-		};
-		5AF69CE318F43FDD0048DF44 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				5AF69CE418F43FDD0048DF44 /* PhotogunTests-Info.plist */,
-				5AF69CE518F43FDD0048DF44 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -253,7 +229,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AF69CE718F43FDD0048DF44 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +249,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5AF69CE918F43FDD0048DF44 /* PhotogunTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,14 +267,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				5AF69CCD18F43FDD0048DF44 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		5AF69CE518F43FDD0048DF44 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				5AF69CE618F43FDD0048DF44 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
