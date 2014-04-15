@@ -63,7 +63,6 @@ VertexData vertices[] = {
     [EAGLContext setCurrentContext:self.context];
     
     [self prepareScene];
-//    [self loadImageWithName:@"test_image.jpg"];
 }
 
 - (void)didReceiveMemoryWarning
