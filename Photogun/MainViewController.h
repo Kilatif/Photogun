@@ -11,6 +11,7 @@
 @interface MainViewController : UIViewController <GLKViewDelegate>
 {
     GLuint _vertexBufferID;
+    GLuint _shaderProgramID;
 }
 
 @property (strong, nonatomic) IBOutlet GLKView *imageGLView;
