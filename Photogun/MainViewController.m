@@ -79,6 +79,7 @@ VertexData vertices[] = {
 
 - (void)prepareScene
 {
+    
     self.baseEffect.transform.projectionMatrix = GLKMatrix4MakeOrtho(0, self.imageGLView.frame.size.width, 0, self.imageGLView.frame.size.height, -10, 10);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -149,7 +150,7 @@ VertexData vertices[] = {
     
     [self.baseEffect prepareToDraw];
     
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
 #pragma mark - Shader methods
