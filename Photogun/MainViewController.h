@@ -7,13 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "OpenGLView.h"
 
-@interface MainViewController : UIViewController <GLKViewDelegate>
+@interface MainViewController : UIViewController
 {
-    GLuint _vertexBufferID;
-    GLuint _shaderProgramID;
+  
 }
 
-@property (strong, nonatomic) IBOutlet GLKView *imageGLView;
+@property (strong, nonatomic) IBOutlet OpenGLView *imageView;
 
 @end

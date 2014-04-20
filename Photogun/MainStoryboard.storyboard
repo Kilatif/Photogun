@@ -31,10 +31,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <glkView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZhB-bE-dnF">
-                                <rect key="frame" x="10" y="73" width="300" height="300"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </glkView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNy-B4-m7c">
                                 <rect key="frame" x="35" y="428" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -55,12 +51,17 @@
                                     <action selector="but2:" destination="CYq-S4-4Pf" eventType="touchUpInside" id="Lm6-eq-EDc"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0sV-Lr-aul" customClass="OpenGLView">
+                                <rect key="frame" x="10" y="73" width="300" height="300"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Photogun v.0.1" id="dwr-Gb-gUY"/>
                     <connections>
-                        <outlet property="imageGLView" destination="ZhB-bE-dnF" id="e34-pW-S29"/>
+                        <outlet property="imageView" destination="0sV-Lr-aul" id="5Xh-YS-4C8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgf-fw-yZG" userLabel="First Responder" sceneMemberID="firstResponder"/>

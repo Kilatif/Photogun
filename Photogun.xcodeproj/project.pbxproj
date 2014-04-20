@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		52534CD91903046100505CC2 /* OpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52534CD81903046100505CC2 /* OpenGLView.m */; };
 		5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB5A31618F5999700356ED5 /* MainViewController.m */; };
 		5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18C18F8485A003D03ED /* test_image.jpg */; };
 		5AE9A18F18F86882003D03ED /* test_image2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18E18F86882003D03ED /* test_image2.jpg */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		52534CD71903046100505CC2 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
+		52534CD81903046100505CC2 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
 		5AB5A31518F5999700356ED5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		5AB5A31618F5999700356ED5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		5AE9A18C18F8485A003D03ED /* test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image.jpg; sourceTree = "<group>"; };
@@ -122,6 +125,8 @@
 		5AF69CC918F43FDD0048DF44 /* Photogun */ = {
 			isa = PBXGroup;
 			children = (
+				52534CD71903046100505CC2 /* OpenGLView.h */,
+				52534CD81903046100505CC2 /* OpenGLView.m */,
 				5AFFDEBF18FEC9E30090D0FD /* Shaders */,
 				5AF69CCA18F43FDD0048DF44 /* Supporting Files */,
 				5AF69CD218F43FDD0048DF44 /* AppDelegate.h */,
@@ -150,8 +155,8 @@
 		5AFFDEBF18FEC9E30090D0FD /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				5AFFDEC218FECA610090D0FD /* Default.fsh */,
 				5AFFDEC318FEE2460090D0FD /* Default.vsh */,
+				5AFFDEC218FECA610090D0FD /* Default.fsh */,
 			);
 			name = Shaders;
 			sourceTree = "<group>";
@@ -203,6 +208,9 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Vitaly Kolesnikov";
 				TargetAttributes = {
+					5AF69CBF18F43FDD0048DF44 = {
+						DevelopmentTeam = 2TVA97E8TF;
+					};
 					5AF69CDA18F43FDD0048DF44 = {
 						TestTargetID = 5AF69CBF18F43FDD0048DF44;
 					};
@@ -258,6 +266,7 @@
 				5AF69CD418F43FDD0048DF44 /* AppDelegate.m in Sources */,
 				5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */,
 				5AF69CD018F43FDD0048DF44 /* main.m in Sources */,
+				52534CD91903046100505CC2 /* OpenGLView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -365,10 +374,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Photogun/Photogun-Prefix.pch";
 				INFOPLIST_FILE = "Photogun/Photogun-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -378,10 +390,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Photogun/Photogun-Prefix.pch";
 				INFOPLIST_FILE = "Photogun/Photogun-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
