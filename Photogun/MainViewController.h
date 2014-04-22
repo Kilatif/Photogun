@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "OpenGLView.h"
+#import "VideoCapture.h"
 
-@interface MainViewController : UIViewController
-{
-  
-}
+@interface MainViewController : UIViewController <VideoCaptureDelegate>
 
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
 

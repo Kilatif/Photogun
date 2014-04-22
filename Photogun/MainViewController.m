@@ -10,35 +10,19 @@
 
 @interface MainViewController ()
 
-@property (nonatomic, strong) EAGLContext *context;
-@property (nonatomic, strong) GLKBaseEffect *baseEffect;
-
-@property (nonatomic, assign) BOOL firstImageLoad;
+@property (nonatomic, strong) VideoCapture *videoCapture;
 
 @end
 
 @implementation MainViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        
-        
-    }
-    
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
+    self.videoCapture = [[VideoCapture alloc] init];
+    self.videoCapture.delegate = self;
+    [self.videoCapture startCapture];
 }
 
 #pragma mark - UIComponents actions
@@ -52,6 +36,11 @@
 
 - (IBAction)but2:(id)sender {
     [self.imageView loadImageWithName:@"test_image2.jpg"];
+}
+
+- (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame
+{
+    [self.imageView loadImageWithBuffer:cameraFrame];
 }
 
 @end

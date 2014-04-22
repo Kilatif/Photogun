@@ -24,5 +24,6 @@
 @property (nonatomic, strong) EAGLContext *context;
 
 - (void)loadImageWithName:(NSString *)name;
+- (void)loadImageWithBuffer:(CVImageBufferRef)buffer;
 
 @end

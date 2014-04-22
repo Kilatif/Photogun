@@ -11,6 +11,8 @@
 		5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB5A31618F5999700356ED5 /* MainViewController.m */; };
 		5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18C18F8485A003D03ED /* test_image.jpg */; };
 		5AE9A18F18F86882003D03ED /* test_image2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18E18F86882003D03ED /* test_image2.jpg */; };
+		5AECF0021906C82600D5F574 /* VideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AECF0011906C82600D5F574 /* VideoCapture.m */; };
+		5AECF0041906C83B00D5F574 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AECF0031906C83B00D5F574 /* AVFoundation.framework */; };
 		5AF69CC418F43FDD0048DF44 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CC318F43FDD0048DF44 /* Foundation.framework */; };
 		5AF69CC618F43FDD0048DF44 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CC518F43FDD0048DF44 /* CoreGraphics.framework */; };
 		5AF69CC818F43FDD0048DF44 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69CC718F43FDD0048DF44 /* UIKit.framework */; };
@@ -45,6 +47,9 @@
 		5AB5A31618F5999700356ED5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		5AE9A18C18F8485A003D03ED /* test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image.jpg; sourceTree = "<group>"; };
 		5AE9A18E18F86882003D03ED /* test_image2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image2.jpg; sourceTree = "<group>"; };
+		5AECF0001906C82600D5F574 /* VideoCapture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCapture.h; sourceTree = "<group>"; };
+		5AECF0011906C82600D5F574 /* VideoCapture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCapture.m; sourceTree = "<group>"; };
+		5AECF0031906C83B00D5F574 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		5AF69CC018F43FDD0048DF44 /* Photogun.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Photogun.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5AF69CC318F43FDD0048DF44 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5AF69CC518F43FDD0048DF44 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -70,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AECF0041906C83B00D5F574 /* AVFoundation.framework in Frameworks */,
 				5AF69D3B18F45F530048DF44 /* OpenGLES.framework in Frameworks */,
 				5AF69D3918F45F460048DF44 /* GLKit.framework in Frameworks */,
 				5AF69CC618F43FDD0048DF44 /* CoreGraphics.framework in Frameworks */,
@@ -112,6 +118,7 @@
 		5AF69CC218F43FDD0048DF44 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5AECF0031906C83B00D5F574 /* AVFoundation.framework */,
 				5AF69D3A18F45F530048DF44 /* OpenGLES.framework */,
 				5AF69D3818F45F460048DF44 /* GLKit.framework */,
 				5AF69CC318F43FDD0048DF44 /* Foundation.framework */,
@@ -134,6 +141,8 @@
 				5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */,
 				5AB5A31518F5999700356ED5 /* MainViewController.h */,
 				5AB5A31618F5999700356ED5 /* MainViewController.m */,
+				5AECF0001906C82600D5F574 /* VideoCapture.h */,
+				5AECF0011906C82600D5F574 /* VideoCapture.m */,
 			);
 			path = Photogun;
 			sourceTree = "<group>";
@@ -263,6 +272,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5AECF0021906C82600D5F574 /* VideoCapture.m in Sources */,
 				5AF69CD418F43FDD0048DF44 /* AppDelegate.m in Sources */,
 				5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */,
 				5AF69CD018F43FDD0048DF44 /* main.m in Sources */,

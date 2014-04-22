@@ -122,17 +122,22 @@ VertexData vertices[] = {
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
-- (GLuint)setupTexture:(NSString *)fileName {
-    
+- (GLuint)setupTexture:(NSString *)fileName
+{
     CGImageRef imageRef = [UIImage imageNamed:fileName].CGImage;
-    
+    return [self setupTextureWithImageRef:imageRef];
+}
+
+- (GLuint)setupTextureWithImageRef:(CGImageRef)imageRef
+{
     NSError *error;
-       GLKTextureInfo *textureInfo = [GLKTextureLoader textureWithCGImage:imageRef options:nil error:&error];
+    GLKTextureInfo *textureInfo = [GLKTextureLoader textureWithCGImage:imageRef options:nil error:&error];
     
     glBindTexture(textureInfo.target, textureInfo.name);
     
     return textureInfo.target;
 }
+
 
 - (void)loadImageWithName:(NSString *)name
 {
@@ -140,21 +145,53 @@ VertexData vertices[] = {
    
     _textureID = [self setupTexture:name];
     
-    [self reloadVerticesForImage:image];
+    [self reloadVerticesForImageSize:image.size];
     [self render];
 }
 
-- (void)reloadVerticesForImage:(UIImage *)image
+- (void)loadImageWithBuffer:(CVImageBufferRef)buffer
+{
+    size_t width = CVPixelBufferGetWidth(buffer);
+    size_t height = CVPixelBufferGetHeight(buffer);
+    
+    _textureID = [self setupTextureWithImageRef:[self getImageRefFromImageBufferRef:buffer]];
+    [self reloadVerticesForImageSize:CGSizeMake(width, height)];
+    [self render];
+}
+
+- (CGImageRef)getImageRefFromImageBufferRef:(CVImageBufferRef)buffer
+{
+    /*Lock the image buffer*/
+    CVPixelBufferLockBaseAddress(buffer,0);
+    /*Get information about the image*/
+    uint8_t *baseAddress = (uint8_t *)CVPixelBufferGetBaseAddress(buffer);
+    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(buffer);
+    size_t width = CVPixelBufferGetWidth(buffer);
+    size_t height = CVPixelBufferGetHeight(buffer);
+    
+    /*Create a CGImageRef from the CVImageBufferRef*/
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef newContext = CGBitmapContextCreate(baseAddress, width, height, 8, bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
+    CGImageRef newImage = CGBitmapContextCreateImage(newContext);
+    
+    /*We release some components*/
+    CGContextRelease(newContext);
+    CGColorSpaceRelease(colorSpace);
+    
+    return newImage;
+}
+
+- (void)reloadVerticesForImageSize:(CGSize)imageSize
 {
     float glViewWidth = self.frame.size.width;
     float glViewHeight = self.frame.size.height;
     
     //Calculate size different between image and glView
-    float sizeDiff = (image.size.width > image.size.height) ? glViewWidth / image.size.width : glViewHeight / image.size.height;
+    float sizeDiff = (imageSize.width > imageSize.height) ? glViewWidth / imageSize.width : glViewHeight / imageSize.height;
     
     //scaling image size, considering sizeDiff
-    float imageWidth = (sizeDiff < 1) ? image.size.width * sizeDiff : image.size.width;
-    float imageHeight = (sizeDiff < 1) ? image.size.height * sizeDiff : image.size.height;
+    float imageWidth = (sizeDiff < 1) ? imageSize.width * sizeDiff : imageSize.width;
+    float imageHeight = (sizeDiff < 1) ? imageSize.height * sizeDiff : imageSize.height;
     
     GLKVector2 startPoint = {glViewWidth / 2 - imageWidth / 2, glViewHeight / 2 - imageHeight / 2};
     
