@@ -27,10 +27,10 @@ typedef struct
 
 VertexData vertices[] = {
     
-    {{0.0f, 0.0f, 0.0f}, {0,1}, {1, 1, 1, 1}},
-    {{SQUARE_SIZE, 0.0f, 0.0f}, {1,1}, {1, 1, 1, 1}},
-    {{0.0f, SQUARE_SIZE, 0.0f}, {0,0}, {1, 1, 1, 1}},
-    {{SQUARE_SIZE, SQUARE_SIZE, 0.0f}, {1,0}, {1, 1, 1, 1}}
+    {{0.0f, 0.0f, 0.0f}, {1,1}, {1, 1, 1, 1}},
+    {{SQUARE_SIZE, 0.0f, 0.0f}, {1,0}, {1, 1, 1, 1}},
+    {{0.0f, SQUARE_SIZE, 0.0f}, {0,1}, {1, 1, 1, 1}},
+    {{SQUARE_SIZE, SQUARE_SIZE, 0.0f}, {0,0}, {1, 1, 1, 1}}
     
 };
 
@@ -101,6 +101,9 @@ VertexData vertices[] = {
     GLuint vertProjection = glGetUniformLocation(_shaderProgramID, "projection");
     GLuint vertTextureCoord = glGetAttribLocation(_shaderProgramID, "tex_coord");
     
+    glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _textureID);
+
     glUniformMatrix4fv(vertProjection, 1, 0, projection.m);
     
     glEnableVertexAttribArray(vertPosAttr);
@@ -119,8 +122,12 @@ VertexData vertices[] = {
   
     glDisableVertexAttribArray(vertTextureCoord);
     
+    glDeleteTextures(1, &_textureID);
+    
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
+
+#pragma mark - Texture Methods
 
 - (GLuint)setupTexture:(NSString *)fileName
 {
@@ -133,52 +140,45 @@ VertexData vertices[] = {
     NSError *error;
     GLKTextureInfo *textureInfo = [GLKTextureLoader textureWithCGImage:imageRef options:nil error:&error];
     
-    glBindTexture(textureInfo.target, textureInfo.name);
-    
-    return textureInfo.target;
+    glBindTexture(GL_TEXTURE_2D, textureInfo.name);
+        
+    return textureInfo.name;
 }
 
+- (GLuint)setupTextureWithBufferRef:(CVImageBufferRef)bufferRef
+{
+    CVPixelBufferLockBaseAddress(bufferRef, 0);
+	int bufferHeight = CVPixelBufferGetHeight(bufferRef);
+	int bufferWidth = CVPixelBufferGetWidth(bufferRef);
+    
+	// Create a new texture from the camera frame data, display that using the shaders
+    
+    GLuint resultTexture;
+    
+	glGenTextures(1, &resultTexture);
+	glBindTexture(GL_TEXTURE_2D, resultTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// This is necessary for non-power-of-two textures
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	
+	// Using BGRA extension to pull in video frame data directly
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bufferWidth, bufferHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, CVPixelBufferGetBaseAddress(bufferRef));
+    
+	CVPixelBufferUnlockBaseAddress(bufferRef, 0);
+    
+    return resultTexture;
+}
 
 - (void)loadImageWithName:(NSString *)name
 {
-    UIImage *image = [UIImage imageNamed:name];
+    __weak UIImage *image = [UIImage imageNamed:name];
    
     _textureID = [self setupTexture:name];
     
     [self reloadVerticesForImageSize:image.size];
     [self render];
-}
-
-- (void)loadImageWithBuffer:(CVImageBufferRef)buffer
-{
-    size_t width = CVPixelBufferGetWidth(buffer);
-    size_t height = CVPixelBufferGetHeight(buffer);
-    
-    _textureID = [self setupTextureWithImageRef:[self getImageRefFromImageBufferRef:buffer]];
-    [self reloadVerticesForImageSize:CGSizeMake(width, height)];
-    [self render];
-}
-
-- (CGImageRef)getImageRefFromImageBufferRef:(CVImageBufferRef)buffer
-{
-    /*Lock the image buffer*/
-    CVPixelBufferLockBaseAddress(buffer,0);
-    /*Get information about the image*/
-    uint8_t *baseAddress = (uint8_t *)CVPixelBufferGetBaseAddress(buffer);
-    size_t bytesPerRow = CVPixelBufferGetBytesPerRow(buffer);
-    size_t width = CVPixelBufferGetWidth(buffer);
-    size_t height = CVPixelBufferGetHeight(buffer);
-    
-    /*Create a CGImageRef from the CVImageBufferRef*/
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef newContext = CGBitmapContextCreate(baseAddress, width, height, 8, bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
-    CGImageRef newImage = CGBitmapContextCreateImage(newContext);
-    
-    /*We release some components*/
-    CGContextRelease(newContext);
-    CGColorSpaceRelease(colorSpace);
-    
-    return newImage;
 }
 
 - (void)reloadVerticesForImageSize:(CGSize)imageSize
@@ -210,6 +210,15 @@ VertexData vertices[] = {
      glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
+- (void)setRedValue:(float)value
+{
+    GLuint redValue = glGetUniformLocation(_shaderProgramID, "redValue");
+    
+    float resultValue = value * 255;
+    NSLog(@">>>>> COLOR VALUE %f: ", resultValue);
+    
+    glUniform1f(redValue, value);
+}
 
 #pragma mark - Shaders methods
 
@@ -320,6 +329,19 @@ VertexData vertices[] = {
     }
     
     return result;
+}
+
+#pragma mark - VideoCaptureDelegate
+
+- (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame
+{
+    int bufferHeight = CVPixelBufferGetHeight(cameraFrame);
+	int bufferWidth = CVPixelBufferGetWidth(cameraFrame);
+	
+    [self reloadVerticesForImageSize:CGSizeMake(bufferHeight, bufferWidth)];
+    _textureID = [self setupTextureWithBufferRef:cameraFrame];
+    
+    [self render];
 }
 
 @end

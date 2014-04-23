@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "VideoCapture.h"
 
-
-@interface OpenGLView : UIView {
+@interface OpenGLView : UIView <VideoCaptureDelegate> {
     
     GLuint _renderBufferID;
     GLuint _frameBufferID;
@@ -17,6 +17,8 @@
     
     GLuint _shaderProgramID;
     GLuint _textureID;
+    
+    GLuint _videoFrameTexture;
 
 }
 
@@ -24,6 +26,6 @@
 @property (nonatomic, strong) EAGLContext *context;
 
 - (void)loadImageWithName:(NSString *)name;
-- (void)loadImageWithBuffer:(CVImageBufferRef)buffer;
+- (void)setRedValue:(float)value;
 
 @end

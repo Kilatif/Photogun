@@ -66,6 +66,7 @@
         
         
         [self.captureSession setSessionPreset:AVCaptureSessionPreset640x480];
+
     }
     
     return self;

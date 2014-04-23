@@ -10,8 +10,9 @@
 #import "OpenGLView.h"
 #import "VideoCapture.h"
 
-@interface MainViewController : UIViewController <VideoCaptureDelegate>
+@interface MainViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
+@property (strong, nonatomic) IBOutlet UISlider *colorSlider;
 
 @end

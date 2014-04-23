@@ -21,7 +21,7 @@
     [super viewDidLoad];
     
     self.videoCapture = [[VideoCapture alloc] init];
-    self.videoCapture.delegate = self;
+    self.videoCapture.delegate = self.imageView;
     [self.videoCapture startCapture];
 }
 
@@ -38,9 +38,11 @@
     [self.imageView loadImageWithName:@"test_image2.jpg"];
 }
 
-- (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame
-{
-    [self.imageView loadImageWithBuffer:cameraFrame];
+- (IBAction)colorChanged:(id)sender {
+    NSLog(@">>>>> COLOR VALUE %f: ", self.colorSlider.value);
+    
+    [self.imageView setRedValue:self.colorSlider.value];
 }
+
 
 @end
