@@ -214,9 +214,6 @@ VertexData vertices[] = {
 {
     GLuint redValue = glGetUniformLocation(_shaderProgramID, "redValue");
     
-    float resultValue = value * 255;
-    NSLog(@">>>>> COLOR VALUE %f: ", resultValue);
-    
     glUniform1f(redValue, value);
 }
 

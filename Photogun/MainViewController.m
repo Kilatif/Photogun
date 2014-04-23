@@ -38,9 +38,8 @@
     [self.imageView loadImageWithName:@"test_image2.jpg"];
 }
 
-- (IBAction)colorChanged:(id)sender {
-    NSLog(@">>>>> COLOR VALUE %f: ", self.colorSlider.value);
-    
+- (IBAction)colorChanged:(id)sender
+{
     [self.imageView setRedValue:self.colorSlider.value];
 }
 
