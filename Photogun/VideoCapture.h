@@ -17,10 +17,13 @@
 @property (nonatomic, assign) id<VideoCaptureDelegate> delegate;
 
 - (void)startCapture;
+- (void)stopCapture;
 
 @end
 
 @protocol VideoCaptureDelegate
+
+@property (nonatomic, assign) BOOL isFrameFreeze;
 
 - (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame;
 

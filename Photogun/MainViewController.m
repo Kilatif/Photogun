@@ -29,13 +29,16 @@
 
 - (IBAction)but1:(id)sender {
     
-    [self.imageView loadImageWithName:@"test_image.jpg"];
-    //[self loadImageWithName:@"test_image.jpg"];
+    UIImage *image = [self.imageView getGLFrameImage];
+    //[self.imageView loadImageWithImage:image];
+    [self.imageTest setImage:image];
 }
 
 
 - (IBAction)but2:(id)sender {
-    [self.imageView loadImageWithName:@"test_image2.jpg"];
+
+    UIImageWriteToSavedPhotosAlbum(self.imageTest.image, nil, nil, nil);
+  //  [self.imageView loadImageWithImage:[UIImage imageNamed:@"test_image2.jpg"]];
 }
 
 - (IBAction)colorChanged:(id)sender
@@ -43,5 +46,12 @@
     [self.imageView setRedValue:self.colorSlider.value];
 }
 
+- (IBAction)frameFreeze:(UISwitch *)sender
+{
+    if (sender.on) [self.videoCapture startCapture];
+    else [self.videoCapture stopCapture];
+    
+    
+}
 
 @end

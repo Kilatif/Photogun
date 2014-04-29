@@ -26,6 +26,9 @@
 @property (nonatomic, strong) EAGLContext *context;
 
 - (void)loadImageWithName:(NSString *)name;
+- (void)loadImageWithImage:(UIImage *)image;
+
 - (void)setRedValue:(float)value;
+- (UIImage *)getGLFrameImage;
 
 @end

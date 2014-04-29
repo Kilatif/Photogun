@@ -12,7 +12,7 @@
 #define SHADER_LOGS 1
 
 static NSString * const VERTEX_SHADER_NAME = @"Default";
-static NSString * const FRAGMENT_SHADE_NAME = @"Default";
+static NSString * const FRAGMENT_SHADE_NAME = @"Histogram";
 
 static NSString * const SHADER_TYPE_FRAGMENT = @"fsh";
 static NSString * const SHADER_TYPE_VERTEX = @"vsh";
@@ -39,6 +39,7 @@ VertexData vertices[] = {
 @synthesize eaglLayer;
 @synthesize context;
 
+@synthesize isFrameFreeze;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -50,6 +51,8 @@ VertexData vertices[] = {
         
         self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         [EAGLContext setCurrentContext:self.context];
+        
+        self.eaglLayer.drawableProperties = @{kEAGLDrawablePropertyRetainedBacking: @YES};
         
         [self initializeScene];
         [self prepareScene];
@@ -83,7 +86,8 @@ VertexData vertices[] = {
     glBindBuffer(GL_ARRAY_BUFFER, _vertexBufferID);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     
-    _shaderProgramID = [self createProgramWithVertexShader:@"Default" andFragmentShader:@"Default"];
+    _shaderProgramID = [self createProgramWithVertexShader:VERTEX_SHADER_NAME
+                                         andFragmentShader:FRAGMENT_SHADE_NAME];
     glUseProgram(_shaderProgramID);
 }
 
@@ -122,23 +126,24 @@ VertexData vertices[] = {
   
     glDisableVertexAttribArray(vertTextureCoord);
     
-    glDeleteTextures(1, &_textureID);
-    
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 #pragma mark - Texture Methods
 
-- (GLuint)setupTexture:(NSString *)fileName
+- (GLuint)setupTextureWithImage:(UIImage *)image
 {
-    CGImageRef imageRef = [UIImage imageNamed:fileName].CGImage;
+    CGImageRef imageRef = image.CGImage;
     return [self setupTextureWithImageRef:imageRef];
 }
 
 - (GLuint)setupTextureWithImageRef:(CGImageRef)imageRef
 {
     NSError *error;
+    
     GLKTextureInfo *textureInfo = [GLKTextureLoader textureWithCGImage:imageRef options:nil error:&error];
+    if (error)
+        NSLog(@"%@", error);
     
     glBindTexture(GL_TEXTURE_2D, textureInfo.name);
         
@@ -171,15 +176,22 @@ VertexData vertices[] = {
     return resultTexture;
 }
 
-- (void)loadImageWithName:(NSString *)name
+- (void)loadImageWithImage:(UIImage *)image
 {
-    __weak UIImage *image = [UIImage imageNamed:name];
-   
-    _textureID = [self setupTexture:name];
+   // CGBitmapInfo bitmapInfp = CGImageGetBitmapInfo(image.CGImage);
+    glDeleteTextures(1, &_textureID);
+    _textureID = [self setupTextureWithImage:image];
     
     [self reloadVerticesForImageSize:image.size];
     [self render];
 }
+
+- (void)loadImageWithName:(NSString *)name
+{
+    __weak UIImage *image = [UIImage imageNamed:name];
+    [self loadImageWithImage:image];
+}
+
 
 - (void)reloadVerticesForImageSize:(CGSize)imageSize
 {
@@ -215,6 +227,8 @@ VertexData vertices[] = {
     GLuint redValue = glGetUniformLocation(_shaderProgramID, "redValue");
     
     glUniform1f(redValue, value);
+    if (self.isFrameFreeze)
+        [self render];
 }
 
 #pragma mark - Shaders methods
@@ -224,8 +238,8 @@ VertexData vertices[] = {
     GLuint vertexShaderID, fragmentShaderID;
     GLuint shaderProgram = 0;
     
-    vertexShaderID = [self createShader:@"Default" forType:GL_VERTEX_SHADER];
-    fragmentShaderID = [self createShader:@"Default" forType:GL_FRAGMENT_SHADER];
+    vertexShaderID = [self createShader:vertexShaderName forType:GL_VERTEX_SHADER];
+    fragmentShaderID = [self createShader:fragmentShaderName forType:GL_FRAGMENT_SHADER];
     
     shaderProgram = glCreateProgram();
     
@@ -245,7 +259,7 @@ VertexData vertices[] = {
 {
     GLuint result = 0;
     NSString *shaderFileType = (shaderType == GL_VERTEX_SHADER) ? SHADER_TYPE_VERTEX : SHADER_TYPE_FRAGMENT;
-    NSString *shaderFileName = [[NSBundle mainBundle] pathForResource:@"Default" ofType:shaderFileType];
+    NSString *shaderFileName = [[NSBundle mainBundle] pathForResource:shaderName ofType:shaderFileType];
     
     const GLchar *shaderSource = (GLchar *)[[NSString stringWithContentsOfFile:shaderFileName encoding:NSUTF8StringEncoding error:nil] UTF8String];
     
@@ -332,13 +346,56 @@ VertexData vertices[] = {
 
 - (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame
 {
+    
     int bufferHeight = CVPixelBufferGetHeight(cameraFrame);
 	int bufferWidth = CVPixelBufferGetWidth(cameraFrame);
 	
     [self reloadVerticesForImageSize:CGSizeMake(bufferHeight, bufferWidth)];
+    
+    glDeleteTextures(1, &_textureID);
     _textureID = [self setupTextureWithBufferRef:cameraFrame];
     
     [self render];
+}
+
+- (UIImage *)getGLFrameImage
+{
+    if (!self.isFrameFreeze)
+        return nil;
+    
+    int width = self.frame.size.width;
+    int height = self.frame.size.height;
+    int imageLength = width * height * 4;
+    
+    GLubyte *imageDataBuffer = (GLubyte *)malloc(imageLength);
+    glReadPixels(0, 0, self.frame.size.width, self.frame.size.height, GL_RGBA, GL_UNSIGNED_BYTE, imageDataBuffer);
+    
+    for (int i = 0; i < height / 2; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            for (int k = 0; k < 4; k++)
+            {
+                GLubyte temp = imageDataBuffer[i * width * 4 + j * 4 + k];
+                imageDataBuffer[i * width * 4+ j * 4 + k] = imageDataBuffer[(height - i - 1) * width * 4 + j * 4 + k];
+                imageDataBuffer[(height - i - 1) * width * 4 + j * 4 + k] = temp;
+            }
+        }
+    }
+    
+    
+    CGBitmapInfo bitmapInfo = (CGBitmapInfo) kCGImageAlphaNoneSkipLast;
+    CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+    
+    CGContextRef contextRef = CGBitmapContextCreate(imageDataBuffer, width, height, 8, width * 4, colorSpaceRef, bitmapInfo);
+    
+    CGImageRef imageRef = CGBitmapContextCreateImage(contextRef);
+    UIImage *image = [UIImage imageWithCGImage:imageRef];
+    
+    CGContextRelease(contextRef);
+    CGColorSpaceRelease(colorSpaceRef);
+
+    return image;
 }
 
 @end

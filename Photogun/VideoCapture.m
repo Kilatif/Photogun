@@ -86,7 +86,19 @@
 - (void)startCapture
 {
     if (![self.captureSession isRunning] && self.delegate)
+    {
         [self.captureSession startRunning];
+        self.delegate.isFrameFreeze = NO;
+    };
+}
+
+- (void)stopCapture
+{
+    if ([self.captureSession isRunning])
+    {
+        [self.captureSession stopRunning];
+        self.delegate.isFrameFreeze = YES;
+    }
 }
 
 #pragma mark - AVCaptureVideoDataOutputSampleBufferDelegate
