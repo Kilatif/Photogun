@@ -358,18 +358,14 @@ VertexData vertices[] = {
     [self render];
 }
 
-- (UIImage *)getGLFrameImage
+- (GLubyte *)getGLFramePixelDataWithRect:(CGRect)rect
 {
-    if (!self.isFrameFreeze)
-        return nil;
-    
-    int width = self.frame.size.width;
-    int height = self.frame.size.height;
+    int width = rect.size.width;
+    int height = rect.size.height;
     int imageLength = width * height * 4;
     
     GLubyte *imageDataBuffer = (GLubyte *)malloc(imageLength);
-    glReadPixels(0, 0, self.frame.size.width, self.frame.size.height, GL_RGBA, GL_UNSIGNED_BYTE, imageDataBuffer);
-    
+    glReadPixels(rect.origin.x, rect.origin.y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageDataBuffer);
     for (int i = 0; i < height / 2; i++)
     {
         for (int j = 0; j < width; j++)
@@ -383,6 +379,20 @@ VertexData vertices[] = {
         }
     }
     
+    return imageDataBuffer;
+}
+
+- (UIImage *)getGLFrameImage
+{
+    if (!self.isFrameFreeze)
+        return nil;
+    
+    CGRect imageRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    
+    int width = imageRect.size.width;
+    int height = imageRect.size.height;
+    
+    GLubyte *imageDataBuffer = [self getGLFramePixelDataWithRect: imageRect];
     
     CGBitmapInfo bitmapInfo = (CGBitmapInfo) kCGImageAlphaNoneSkipLast;
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
