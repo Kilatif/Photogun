@@ -9,6 +9,20 @@
 #import <UIKit/UIKit.h>
 #import "VideoCapture.h"
 
+typedef struct
+{
+    GLubyte *data;
+    GLuint width;
+    GLuint height;
+    
+} GLPixelArray;
+
+typedef enum : NSUInteger {
+    HistogramRedChannel,
+    HistogramGreenChannel,
+    HistogramBlueChannel,
+} HistogramType;
+
 @interface OpenGLView : UIView <VideoCaptureDelegate> {
     
     GLuint _renderBufferID;
@@ -30,5 +44,6 @@
 
 - (void)setRedValue:(float)value;
 - (UIImage *)getGLFrameImage;
+- (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType;
 
 @end
