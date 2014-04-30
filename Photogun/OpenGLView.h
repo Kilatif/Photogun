@@ -9,14 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "VideoCapture.h"
 
-typedef struct
-{
-    GLubyte *data;
-    GLuint width;
-    GLuint height;
-    
-} GLPixelArray;
-
 typedef enum : NSUInteger {
     HistogramRedChannel,
     HistogramGreenChannel,
@@ -43,6 +35,7 @@ typedef enum : NSUInteger {
 - (void)loadImageWithImage:(UIImage *)image;
 
 - (void)setRedValue:(float)value;
+- (NSData *)getGLFramePixelData;
 - (UIImage *)getGLFrameImage;
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType;
 

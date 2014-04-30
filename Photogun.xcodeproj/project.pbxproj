@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		5216A552190EBD9100D3DFBF /* Contrast.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A551190EBD9100D3DFBF /* Contrast.fsh */; };
 		5216A554190EBE2900D3DFBF /* Histogram.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A553190EBE2900D3DFBF /* Histogram.fsh */; };
-		5216A557191071E100D3DFBF /* UIImage+Histogram.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216A556191071E100D3DFBF /* UIImage+Histogram.m */; };
+		5216A55A19107DE700D3DFBF /* HistogramImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216A55919107DE700D3DFBF /* HistogramImageView.m */; };
 		52534CD91903046100505CC2 /* OpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52534CD81903046100505CC2 /* OpenGLView.m */; };
 		5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB5A31618F5999700356ED5 /* MainViewController.m */; };
 		5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18C18F8485A003D03ED /* test_image.jpg */; };
@@ -46,8 +46,8 @@
 /* Begin PBXFileReference section */
 		5216A551190EBD9100D3DFBF /* Contrast.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Contrast.fsh; sourceTree = "<group>"; };
 		5216A553190EBE2900D3DFBF /* Histogram.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Histogram.fsh; sourceTree = "<group>"; };
-		5216A555191071E100D3DFBF /* UIImage+Histogram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Histogram.h"; sourceTree = "<group>"; };
-		5216A556191071E100D3DFBF /* UIImage+Histogram.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Histogram.m"; sourceTree = "<group>"; };
+		5216A55819107DE700D3DFBF /* HistogramImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistogramImageView.h; sourceTree = "<group>"; };
+		5216A55919107DE700D3DFBF /* HistogramImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistogramImageView.m; sourceTree = "<group>"; };
 		52534CD71903046100505CC2 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		52534CD81903046100505CC2 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
 		5AB5A31518F5999700356ED5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
@@ -150,8 +150,8 @@
 				5AB5A31618F5999700356ED5 /* MainViewController.m */,
 				5AECF0001906C82600D5F574 /* VideoCapture.h */,
 				5AECF0011906C82600D5F574 /* VideoCapture.m */,
-				5216A555191071E100D3DFBF /* UIImage+Histogram.h */,
-				5216A556191071E100D3DFBF /* UIImage+Histogram.m */,
+				5216A55819107DE700D3DFBF /* HistogramImageView.h */,
+				5216A55919107DE700D3DFBF /* HistogramImageView.m */,
 			);
 			path = Photogun;
 			sourceTree = "<group>";
@@ -287,8 +287,8 @@
 			files = (
 				5AECF0021906C82600D5F574 /* VideoCapture.m in Sources */,
 				5AF69CD418F43FDD0048DF44 /* AppDelegate.m in Sources */,
-				5216A557191071E100D3DFBF /* UIImage+Histogram.m in Sources */,
 				5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */,
+				5216A55A19107DE700D3DFBF /* HistogramImageView.m in Sources */,
 				5AF69CD018F43FDD0048DF44 /* main.m in Sources */,
 				52534CD91903046100505CC2 /* OpenGLView.m in Sources */,
 			);

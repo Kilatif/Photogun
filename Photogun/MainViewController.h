@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "OpenGLView.h"
 #import "VideoCapture.h"
+#import "HistogramImageView.h"
 
 @interface MainViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
 @property (strong, nonatomic) IBOutlet UISlider *colorSlider;
-@property (strong, nonatomic) IBOutlet UIImageView *imageTest;
+@property (strong, nonatomic) IBOutlet HistogramImageView *imageTest;
 
 @end

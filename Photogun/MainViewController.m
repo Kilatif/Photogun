@@ -7,11 +7,11 @@
 //
 
 #import "MainViewController.h"
-#import "UIImage+Histogram.h"
 
 @interface MainViewController ()
 
 @property (nonatomic, strong) VideoCapture *videoCapture;
+@property (nonatomic, assign) HistogramType histogramType;
 
 @end
 
@@ -31,16 +31,13 @@
 - (IBAction)but1:(id)sender {
 
         //[self.imageView loadImageWithImage:image];
-    NSArray *histoData = [self.imageView histogramFromGLViewWithType:HistogramGreenChannel];
-    [self.imageTest setImage:[UIImage imageWithHistogramData:histoData toSize:self.imageTest.frame.size
-                              withColor:[UIColor colorWithRed:0 green:1 blue:0 alpha:1]
-                          andBackground:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1]]];
+   
 }
 
 
 - (IBAction)but2:(id)sender {
 
-    UIImageWriteToSavedPhotosAlbum(self.imageTest.image, nil, nil, nil);
+    UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], nil, nil, nil);
   //  [self.imageView loadImageWithImage:[UIImage imageNamed:@"test_image2.jpg"]];
 }
 
@@ -48,10 +45,8 @@
 {
     [self.imageView setRedValue:self.colorSlider.value];
     
-    NSArray *histoData = [self.imageView histogramFromGLViewWithType:HistogramGreenChannel];
-    [self.imageTest setImage:[UIImage imageWithHistogramData:histoData toSize:self.imageTest.frame.size
-                                                   withColor:[UIColor colorWithRed:0 green:1 blue:0 alpha:1]
-                                               andBackground:[UIColor colorWithRed:0.5f green:0.5f blue:0.5f alpha:1]]];
+    [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
+    //[self.imageTest setImage:[self.imageView getGLFrameImage]];
 }
 
 - (IBAction)frameFreeze:(UISwitch *)sender

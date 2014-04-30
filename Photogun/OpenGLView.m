@@ -12,7 +12,7 @@
 #define SHADER_LOGS 1
 
 static NSString * const VERTEX_SHADER_NAME = @"Default";
-static NSString * const FRAGMENT_SHADE_NAME = @"Histogram";
+static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
 
 static NSString * const SHADER_TYPE_FRAGMENT = @"fsh";
 static NSString * const SHADER_TYPE_VERTEX = @"vsh";
@@ -359,33 +359,37 @@ VertexData vertices[] = {
 
 #pragma mark - Other functions
 
-- (GLPixelArray)getGLFramePixelDataWithRect:(CGRect)rect
+- (NSData *)getGLFramePixelData
+{
+    CGRect imageRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    return [self getGLFramePixelDataWithRect:imageRect];
+}
+
+- (NSData *)getGLFramePixelDataWithRect:(CGRect)rect
 {
     int width = rect.size.width;
     int height = rect.size.height;
     int imageLength = width * height * 4;
     
-    GLPixelArray imageDataBuffer;
+    GLubyte *imageDataBuffer;
     
-    imageDataBuffer.data = (GLubyte *)malloc(imageLength);
-    imageDataBuffer.width = width;
-    imageDataBuffer.height = height;
-    
-    glReadPixels(rect.origin.x, rect.origin.y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageDataBuffer.data);
+    imageDataBuffer = (GLubyte *)malloc(imageLength);
+    glReadPixels(rect.origin.x, rect.origin.y, width, height, GL_RGBA, GL_UNSIGNED_BYTE, imageDataBuffer);
     for (int i = 0; i < height / 2; i++)
     {
         for (int j = 0; j < width; j++)
         {
             for (int k = 0; k < 4; k++)
             {
-                GLubyte temp = imageDataBuffer.data[i * width * 4 + j * 4 + k];
-                imageDataBuffer.data[i * width * 4+ j * 4 + k] = imageDataBuffer.data[(height - i - 1) * width * 4 + j * 4 + k];
-                imageDataBuffer.data[(height - i - 1) * width * 4 + j * 4 + k] = temp;
+                GLubyte temp = imageDataBuffer[i * width * 4 + j * 4 + k];
+                imageDataBuffer[i * width * 4+ j * 4 + k] = imageDataBuffer[(height - i - 1) * width * 4 + j * 4 + k];
+                imageDataBuffer[(height - i - 1) * width * 4 + j * 4 + k] = temp;
             }
         }
     }
     
-    return imageDataBuffer;
+    NSData *result = [NSData dataWithBytes:imageDataBuffer length:imageLength];
+    return result;
 }
 
 - (UIImage *)getGLFrameImage
@@ -398,8 +402,7 @@ VertexData vertices[] = {
     int width = imageRect.size.width;
     int height = imageRect.size.height;
     
-    GLubyte *imageDataBuffer = [self getGLFramePixelDataWithRect: imageRect].data;
-    
+    GLubyte *imageDataBuffer = (GLubyte *)[self getGLFramePixelDataWithRect: imageRect].bytes;
     CGBitmapInfo bitmapInfo = (CGBitmapInfo) kCGImageAlphaNoneSkipLast;
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     
@@ -410,27 +413,28 @@ VertexData vertices[] = {
     
     CGContextRelease(contextRef);
     CGColorSpaceRelease(colorSpaceRef);
-    free(imageDataBuffer);
 
     return image;
 }
 
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType
 {
-    GLPixelArray pixelData = [self getGLFramePixelDataWithRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+    NSData *pixelData = [self getGLFramePixelDataWithRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     
     return [self histogramFromData:pixelData withType:histogramType];
 }
 
-- (NSArray *)histogramFromData:(GLPixelArray)pixelData withType:(HistogramType)histogramType
+- (NSArray *)histogramFromData:(NSData *)pixelData withType:(HistogramType)histogramType
 {
     NSMutableArray *arrayResult = [NSMutableArray array];
     GLfloat *result = (GLfloat *)malloc(256 * sizeof(GLfloat));
+    GLubyte *pixelDataBuffer = (GLubyte *)[pixelData bytes];
+    
     for (int i = 0; i < 256; i++)
         result[i] = 0;
     
-    for (int i = 0; i < pixelData.height * pixelData.width; i ++)
-        result[pixelData.data[i * 4 + histogramType]]++;
+    for (int i = 0; i < pixelData.length / 4; i ++)
+        result[pixelDataBuffer[i * 4 + histogramType]]++;
     
     for (int i = 0; i < 256; i++)
     {
