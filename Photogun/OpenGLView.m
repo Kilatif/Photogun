@@ -389,6 +389,7 @@ VertexData vertices[] = {
     }
     
     NSData *result = [NSData dataWithBytes:imageDataBuffer length:imageLength];
+    free(imageDataBuffer);
     return result;
 }
 

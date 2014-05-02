@@ -21,6 +21,8 @@
 {
     [super viewDidLoad];
     
+    self.imageTest.alpha = 0.7f;
+    
     self.videoCapture = [[VideoCapture alloc] init];
     self.videoCapture.delegate = self.imageView;
     [self.videoCapture startCapture];

@@ -1,3 +1,7 @@
+#define RED_COLOR_TYPE 1
+#define GREEN_COLOR_TYPE 2
+#define BLUE_COLOR_TYPE 3
+
 precision highp float;
 
 uniform sampler2D texture;
@@ -6,24 +10,116 @@ uniform float redValue;
 varying vec4 color_frag;
 varying vec2 tex_coord_frag;
 
+#pragma mark - interface
+
 vec3 rgb2hsv(vec3 c);
 vec3 hsv2rgb(vec3 c);
 
+vec3 contrast(vec3 oldColor, float contrastValue);
+vec3 saturation(vec3 oldColor, float saturationValue);
+vec3 brightness(vec3 oldColor, float brightnessValue);
+
+vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
+vec3 colorBalanceMidtones(vec3 oldColor, float redValue, float greenValue, float blueValue);
+
+#pragma mark - implementation
+
 void main()
-
-
 {
     vec3 color = vec3(texture2D(texture, tex_coord_frag.st));
-    vec3 LumCoeff = vec3(0.2155, 0.7154, 0.0721);
     
-    vec3 AvgLumin = vec3(0.5, 0.5, 0.5);
-    vec3 intensity = vec3(dot(color, LumCoeff));
-    
-    vec3 satColor = mix(intensity, color, 1.0);
-    vec3 conColor = mix(AvgLumin, satColor, redValue + 0.5);
+    vec3 conColor = colorBalanceMidtonesOne(color, redValue, RED_COLOR_TYPE);
     
     gl_FragColor = color_frag * vec4(conColor, 1.0);
 }
+
+#pragma mark - BCS filters (Brightness, Contrast, Saturation)
+
+//brightnessValue = 0.0 - minimal, 2.0 = maximum
+vec3 brightness(vec3 oldColor, float brightnessValue)
+{
+    brightnessValue = max(brightnessValue, 0.0);
+    brightnessValue = min(brightnessValue, 2.0);
+    
+    vec3 avgLumin;
+    
+    if (brightnessValue < 1.0)
+    {
+        brightnessValue = 2.0 - brightnessValue;
+        avgLumin = vec3(1.0, 1.0, 1.0);
+    }
+    else
+        avgLumin = vec3(0.0, 0.0, 0.0);
+    
+    return mix(avgLumin, oldColor.rgb, brightnessValue);
+}
+
+//contrastValue = 0.5 - minimal, 2.5 = maximum
+vec3 contrast(vec3 oldColor, float contrastValue)
+{
+    contrastValue = max(contrastValue, 0.5);
+    contrastValue = min(contrastValue, 2.5);
+    
+    vec3 avgLumin = vec3(0.5, 0.5, 0.5);
+
+    return mix(avgLumin, oldColor.rgb, contrastValue);
+}
+
+//saturationValue = 0.0 - minumal, 2.0 - maximum
+vec3 saturation(vec3 oldColor, float saturationValue)
+{
+    saturationValue = max(saturationValue, 0.0);
+    saturationValue = min(saturationValue, 2.0);
+    
+    vec3 lumCoeff = vec3(0.2155, 0.7154, 0.0721);
+    vec3 intensity = vec3(dot(oldColor, lumCoeff));
+    
+    return mix(intensity, oldColor, saturationValue);
+}
+
+#pragma mark - Color balance filters
+
+//value = 0.5 - minimal, 2.5 - maximum
+vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
+{
+    value = max(value, 0.5);
+    value = min(value, 1.5);
+    
+    vec3 interpolColor = vec3(oldColor.r, oldColor.g, oldColor.b);
+    
+    if (colorType == RED_COLOR_TYPE)
+        interpolColor.r = 0.0;
+    
+    if (colorType == GREEN_COLOR_TYPE)
+        interpolColor.g = 0.0;
+    
+    if (colorType == BLUE_COLOR_TYPE)
+        interpolColor.b = 0.0;
+    
+    vec3 result = mix(interpolColor, oldColor, value);
+    
+    if (colorType == RED_COLOR_TYPE)
+    {
+        result.g += 1.0 - value;
+        result.b += 1.0 - value;
+    }
+    
+    if (colorType == GREEN_COLOR_TYPE)
+    {
+        result.r += 1.0 - value;
+        result.b += 1.0 - value;
+    }
+    
+    if (colorType == BLUE_COLOR_TYPE)
+    {
+        result.r += 1.0 - value;
+        result.g += 1.0 - value;
+    }
+    
+    return result;
+}
+
+#pragma mark - Convert functions
 
 vec3 rgb2hsv(vec3 c)
 {
