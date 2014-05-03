@@ -20,7 +20,8 @@ vec3 saturation(vec3 oldColor, float saturationValue);
 vec3 brightness(vec3 oldColor, float brightnessValue);
 
 vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
-vec3 colorBalanceMidtones(vec3 oldColor, float redValue, float greenValue, float blueValue);
+vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType);
+vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType);
 
 #pragma mark - implementation
 
@@ -28,7 +29,7 @@ void main()
 {
     vec3 color = vec3(texture2D(texture, tex_coord_frag.st));
     
-    vec3 conColor = colorBalanceMidtonesOne(color, redValue, RED_COLOR_TYPE);
+    vec3 conColor = colorBalanceLightOne(color, redValue, GREEN_COLOR_TYPE);
     
     gl_FragColor = color_frag * vec4(conColor, 1.0);
 }
@@ -79,7 +80,7 @@ vec3 saturation(vec3 oldColor, float saturationValue)
 
 #pragma mark - Color balance filters
 
-//value = 0.5 - minimal, 2.5 - maximum
+//value = 0.5 - minimal, 1.5 - maximum
 vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
 {
     value = max(value, 0.5);
@@ -115,6 +116,84 @@ vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
         result.r += 1.0 - value;
         result.g += 1.0 - value;
     }
+    
+    return result;
+}
+
+//value = 0.5 - minimal, 1.5 - maximum
+vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType)
+{
+    value = max(value, 0.5);
+    value = min(value, 1.5);
+    
+    if (value > 1.0)
+    {
+        if (colorType == RED_COLOR_TYPE)
+        {
+            oldColor.g += 1.0 - value;
+            oldColor.b += 1.0 - value;
+        }
+        
+        if (colorType == GREEN_COLOR_TYPE)
+        {
+            oldColor.r += 1.0 - value;
+            oldColor.b += 1.0 - value;
+        }
+        
+        if (colorType == BLUE_COLOR_TYPE)
+        {
+            oldColor.g += 1.0 - value;
+            oldColor.b += 1.0 - value;
+        }
+    }
+    else
+    {
+        if (colorType == RED_COLOR_TYPE)
+            oldColor.r += value - 1.0;
+        
+        if (colorType == GREEN_COLOR_TYPE)
+            oldColor.g += value - 1.0;
+        
+        if (colorType == BLUE_COLOR_TYPE)
+            oldColor.b += value - 1.0;
+    }
+    
+    return oldColor;
+}
+
+//value = 0.0 - minimal, 2.0 - maximum
+vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType)
+{
+    value = max(value, 0.0);
+    value = min(value, 2.0);
+    
+    vec3 interpolColor;
+    
+    if (value > 1.0)
+    {
+        if (colorType == RED_COLOR_TYPE)
+            interpolColor = vec3(0.0, oldColor.g, oldColor.b);
+        
+        if (colorType == GREEN_COLOR_TYPE)
+            interpolColor = vec3(oldColor.r, 0.0, oldColor.b);
+        
+        if (colorType == BLUE_COLOR_TYPE)
+            interpolColor = vec3(oldColor.r, oldColor.g, 0.0);
+    }
+    else
+    {
+        value = 2.0 - value;
+        if (colorType == RED_COLOR_TYPE)
+            interpolColor = vec3(oldColor.r, 0.0, 0.0);
+        
+        if (colorType == GREEN_COLOR_TYPE)
+            interpolColor = vec3(0.0, oldColor.g, 0.0);
+        
+        if (colorType == BLUE_COLOR_TYPE)
+            interpolColor = vec3(0.0, 0.0, oldColor.b);
+    }
+    
+    vec3 result = mix(interpolColor, oldColor, value);
     
     return result;
 }

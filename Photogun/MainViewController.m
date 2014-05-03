@@ -32,8 +32,29 @@
 
 - (IBAction)but1:(id)sender {
 
-        //[self.imageView loadImageWithImage:image];
-   
+    [self test:10 a:3];
+}
+
+- (void)test:(int)n a:(float)a
+{
+    float sum = 100;
+    
+    float d = (sum - a * (2 * n + 1))/(n*n);
+    
+    for(int i = 0; i < n; i++)
+    {
+        float curVal = d * i + a;
+        NSLog(@"%0.4f ", curVal / 100);
+    }
+    
+    float state = d * n + a;
+    NSLog(@"%0.4f ", state / 100);
+    
+    for(int i = 0; i < n; i++)
+    {
+        float curVal = d * (n - i - 1) + a;
+        NSLog(@"%0.4f ", curVal / 100);
+    }
 }
 
 
