@@ -19,6 +19,9 @@ vec3 contrast(vec3 oldColor, float contrastValue);
 vec3 saturation(vec3 oldColor, float saturationValue);
 vec3 brightness(vec3 oldColor, float brightnessValue);
 
+vec3 exposition(vec3 oldColor, float expositionValue);
+vec3 gammaCorrection(vec3 oldColor, float correctionValue);
+
 vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
 vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType);
 vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType);
@@ -66,7 +69,7 @@ vec3 contrast(vec3 oldColor, float contrastValue)
     return mix(avgLumin, oldColor.rgb, contrastValue);
 }
 
-//saturationValue = 0.0 - minumal, 2.0 - maximum
+//saturationValue = 0.0 - minimal, 2.0 - maximum
 vec3 saturation(vec3 oldColor, float saturationValue)
 {
     saturationValue = max(saturationValue, 0.0);
@@ -76,6 +79,30 @@ vec3 saturation(vec3 oldColor, float saturationValue)
     vec3 intensity = vec3(dot(oldColor, lumCoeff));
     
     return mix(intensity, oldColor, saturationValue);
+}
+
+#pragma mark - Exposition and Gamma-Correction
+
+//expositionValue = 0.5 - minimal, 1.5 - maximal
+vec3 exposition(vec3 oldColor, float expositionValue)
+{
+    expositionValue = max(expositionValue, 0.5);
+    expositionValue = min(expositionValue, 1.5);
+    
+    vec3 interpolColor = vec3(0.0, 0.0, 0.0);
+    
+    return mix(interpolColor, oldColor, expositionValue);
+}
+
+//expositionValue = 0.5 - minimal, 1.5 - maximal
+vec3 gammaCorrection(vec3 oldColor, float correctionValue)
+{
+    correctionValue = max(correctionValue, 0.5);
+    correctionValue = min(correctionValue, 1.5);
+    
+    vec3 interpolColor = vec3(1.0, 1.0, 1.0);
+    
+    return mix(interpolColor, oldColor, expositionValue);
 }
 
 #pragma mark - Color balance filters

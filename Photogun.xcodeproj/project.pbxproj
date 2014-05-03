@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		5216A552190EBD9100D3DFBF /* Contrast.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A551190EBD9100D3DFBF /* Contrast.fsh */; };
-		5216A554190EBE2900D3DFBF /* Histogram.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A553190EBE2900D3DFBF /* Histogram.fsh */; };
 		5216A55A19107DE700D3DFBF /* HistogramImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216A55919107DE700D3DFBF /* HistogramImageView.m */; };
 		5216A55C19142F6300D3DFBF /* Blur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A55B19142F6300D3DFBF /* Blur.fsh */; };
 		5216A55E1914314700D3DFBF /* Blur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A55D1914314700D3DFBF /* Blur.vsh */; };
@@ -47,7 +46,6 @@
 
 /* Begin PBXFileReference section */
 		5216A551190EBD9100D3DFBF /* Contrast.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Contrast.fsh; sourceTree = "<group>"; };
-		5216A553190EBE2900D3DFBF /* Histogram.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Histogram.fsh; sourceTree = "<group>"; };
 		5216A55819107DE700D3DFBF /* HistogramImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistogramImageView.h; sourceTree = "<group>"; };
 		5216A55919107DE700D3DFBF /* HistogramImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistogramImageView.m; sourceTree = "<group>"; };
 		5216A55B19142F6300D3DFBF /* Blur.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Blur.fsh; sourceTree = "<group>"; };
@@ -180,7 +178,6 @@
 				5AFFDEC318FEE2460090D0FD /* Default.vsh */,
 				5AFFDEC218FECA610090D0FD /* Default.fsh */,
 				5216A551190EBD9100D3DFBF /* Contrast.fsh */,
-				5216A553190EBE2900D3DFBF /* Histogram.fsh */,
 				5216A55D1914314700D3DFBF /* Blur.vsh */,
 				5216A55B19142F6300D3DFBF /* Blur.fsh */,
 			);
@@ -273,7 +270,6 @@
 				5AF69CD618F43FDD0048DF44 /* Images.xcassets in Resources */,
 				5AFFDEC718FEE6140090D0FD /* Default.fsh in Resources */,
 				5216A55E1914314700D3DFBF /* Blur.vsh in Resources */,
-				5216A554190EBE2900D3DFBF /* Histogram.fsh in Resources */,
 				5AF69CF318F443E10048DF44 /* MainStoryboard.storyboard in Resources */,
 				5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */,
 			);
