@@ -30,11 +30,6 @@
 
 #pragma mark - UIComponents actions
 
-- (IBAction)but1:(id)sender {
-
-    [self test:10 a:3];
-}
-
 - (void)test:(int)n a:(float)a
 {
     float sum = 100;
@@ -60,15 +55,18 @@
 
 - (IBAction)but2:(id)sender {
 
-    UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], nil, nil, nil);
+    [self.imageView setFilterValue:self.colorSlider.value withType:self.filterType.text.intValue];
+   // [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
+    
+    //UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], nil, nil, nil);
   //  [self.imageView loadImageWithImage:[UIImage imageNamed:@"test_image2.jpg"]];
 }
 
 - (IBAction)colorChanged:(id)sender
 {
-    [self.imageView setRedValue:self.colorSlider.value];
+    [self.imageView setFilterValue:self.colorSlider.value withType:self.filterType.text.intValue];
     
-    [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
+    //[self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
     //[self.imageTest setImage:[self.imageView getGLFrameImage]];
 }
 
@@ -84,6 +82,10 @@
 - (void)setHistogramImageWithData:(NSArray *)histoData
 {
     
+}
+
+- (IBAction)textReturn:(UITextField *)sender {
+    [sender resignFirstResponder];
 }
 
 @end

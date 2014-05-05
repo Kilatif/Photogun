@@ -12,10 +12,13 @@
 #define SHADER_LOGS 1
 
 static NSString * const VERTEX_SHADER_NAME = @"Default";
-static NSString * const FRAGMENT_SHADE_NAME = @"Fogging";
+static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
 
 static NSString * const SHADER_TYPE_FRAGMENT = @"fsh";
 static NSString * const SHADER_TYPE_VERTEX = @"vsh";
+
+float filtersValues[15];
+int filtersOrder[15];
 
 typedef struct
 {
@@ -46,6 +49,14 @@ VertexData vertices[] = {
     self = [super initWithCoder:aDecoder];
     if (self)
     {
+        for(int i = 0; i < 15; i++)
+        {
+            filtersOrder[i] = -1;
+            filtersValues[i] = 1;
+        }
+        
+       
+        
         self.eaglLayer = (CAEAGLLayer*) self.layer;
         self.eaglLayer.opaque = YES;
         
@@ -56,6 +67,19 @@ VertexData vertices[] = {
         
         [self initializeScene];
         [self prepareScene];
+        
+         filtersOrder[0] = 0;
+        filtersOrder[1] = 1;
+        filtersOrder[2] = 2;
+        filtersOrder[3] = 3;
+        filtersOrder[4] = 4;
+         filtersOrder[5] = 5;
+         filtersOrder[6] = 6;
+          filtersOrder[7] = 7;
+          filtersOrder[8] = 8;
+        
+        GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
+        glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
     }
     
     return self;
@@ -89,6 +113,12 @@ VertexData vertices[] = {
     _shaderProgramID = [self createProgramWithVertexShader:VERTEX_SHADER_NAME
                                          andFragmentShader:FRAGMENT_SHADE_NAME];
     glUseProgram(_shaderProgramID);
+    
+    GLuint filtersValuesUniforim = glGetUniformLocation(_shaderProgramID, "filters_values");
+    GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
+    
+    glUniform1fv(filtersValuesUniforim, 15, filtersValues);
+    glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
 }
 
 - (void)render
@@ -153,8 +183,8 @@ VertexData vertices[] = {
 - (GLuint)setupTextureWithBufferRef:(CVImageBufferRef)bufferRef
 {
     CVPixelBufferLockBaseAddress(bufferRef, 0);
-	int bufferHeight = CVPixelBufferGetHeight(bufferRef);
-	int bufferWidth = CVPixelBufferGetWidth(bufferRef);
+	int bufferHeight = (int)CVPixelBufferGetHeight(bufferRef);
+	int bufferWidth = (int)CVPixelBufferGetWidth(bufferRef);
     
 	// Create a new texture from the camera frame data, display that using the shaders
     
@@ -220,15 +250,6 @@ VertexData vertices[] = {
      vertices[3].posCoord.y = startPoint.y + imageHeight;
      
      glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-}
-
-- (void)setRedValue:(float)value
-{
-    GLuint redValue = glGetUniformLocation(_shaderProgramID, "redValue");
-    
-    glUniform1f(redValue, value);
-    if (self.isFrameFreeze)
-        [self render];
 }
 
 #pragma mark - Shaders methods
@@ -346,8 +367,8 @@ VertexData vertices[] = {
 
 - (void)processNewCameraFrame:(CVImageBufferRef)cameraFrame
 {
-    int bufferHeight = CVPixelBufferGetHeight(cameraFrame);
-	int bufferWidth = CVPixelBufferGetWidth(cameraFrame);
+    int bufferHeight = (int)CVPixelBufferGetHeight(cameraFrame);
+	int bufferWidth = (int)CVPixelBufferGetWidth(cameraFrame);
 	
     [self reloadVerticesForImageSize:CGSizeMake(bufferHeight, bufferWidth)];
     
@@ -357,7 +378,7 @@ VertexData vertices[] = {
     [self render];
 }
 
-#pragma mark - Other functions
+#pragma mark - Snapshoot functions
 
 - (NSData *)getGLFramePixelData
 {
@@ -418,6 +439,8 @@ VertexData vertices[] = {
     return image;
 }
 
+#pragma mark - Histogram functions
+
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType
 {
     NSData *pixelData = [self getGLFramePixelDataWithRect:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
@@ -447,5 +470,25 @@ VertexData vertices[] = {
     
     return arrayResult;
 }
+
+#pragma mark - Other functions
+
+- (void)setFilterValue:(float)value withType:(int)type
+{
+    filtersValues[type] = value;
+    
+    GLuint filtersValuesUniforim = glGetUniformLocation(_shaderProgramID, "filters_values");
+    //GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
+    
+    glUniform1fv(filtersValuesUniforim, 15, filtersValues);
+    //glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
+    
+    glUniform1f(glGetUniformLocation(_shaderProgramID, "filter_value"), value);
+    glUniform1i(glGetUniformLocation(_shaderProgramID, "filter_id"), type);
+    
+    if (self.isFrameFreeze)
+        [self render];
+}
+
 
 @end

@@ -1,14 +1,33 @@
-#define RED_COLOR_TYPE 1
-#define GREEN_COLOR_TYPE 2
-#define BLUE_COLOR_TYPE 3
+#define RED_COLOR_TYPE      0
+#define GREEN_COLOR_TYPE    1
+#define BLUE_COLOR_TYPE     2
+
+#define CONTRAST_FILTER_TYPE            0
+#define SATURATION_FILTER_TYPE          1
+#define BRIGHTNESS_FILTER_TYPE          2
+
+#define EXPOSITION_FILTER_TYPE          3
+#define GAMMA_CORRECTION_FILTER_TYPE    4
+
+#define BALANCE_MIDTONES_FILTER_TYPE    5
+#define BALANCE_SHADOWS_FILTER_TYPE     8
+#define BALANCE_LIGHTS_FILTER_TYPE      11
+
+#define BLUR_FILTER_TYPE                14
 
 precision highp float;
 
 uniform sampler2D texture;
-uniform float redValue;
 
 varying vec4 color_frag;
 varying vec2 tex_coord_frag;
+
+//uniform boo0l filtersEnabled[15];
+uniform float filters_values[15];
+uniform int filters_order[15];
+
+uniform float filter_value;
+uniform int filter_id;
 
 #pragma mark - interface
 
@@ -26,15 +45,85 @@ vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
 vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType);
 vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType);
 
+vec4 colorControl(vec4 oldColor);
+vec4 activateFilter(int filterType, vec4 oldColor, float value);
+
 #pragma mark - implementation
 
 void main()
 {
-    vec3 color = vec3(texture2D(texture, tex_coord_frag.st));
+    vec4 color = texture2D(texture, tex_coord_frag.st);
+
+    color = colorControl(color);
+    //color = activateFilter(filter_id, color, filter_value);
     
-    vec3 conColor = colorBalanceLightOne(color, redValue, GREEN_COLOR_TYPE);
+    gl_FragColor = color_frag * color;
+}
+
+vec4 colorControl(vec4 oldColor)
+{
+    vec4 color = oldColor;
+    for (int i = 0; i < 15; i++)
+    {
+        if (filters_order[i] >= 0)
+        {
+            int filterType = filters_order[i];
+            color = activateFilter(filterType, color, filters_values[filterType]);
+        }
+    }
     
-    gl_FragColor = color_frag * vec4(conColor, 1.0);
+    
+    return color;
+}
+
+vec4 activateFilter(int filterType, vec4 oldColor, float value)
+{
+    vec3 result;
+    
+    
+    if (filterType == CONTRAST_FILTER_TYPE)
+        result = contrast(oldColor.rgb, value);
+    
+    else if (filterType == SATURATION_FILTER_TYPE)
+        result = saturation(oldColor.rgb, value);
+    
+    else if (filterType == BRIGHTNESS_FILTER_TYPE)
+        result = brightness(oldColor.rgb, value);
+    
+    else if (filterType == EXPOSITION_FILTER_TYPE)
+        result = exposition(oldColor.rgb, value);
+    
+    else if (filterType == GAMMA_CORRECTION_FILTER_TYPE)
+        result = gammaCorrection(oldColor.rgb, value);
+    
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
+        result = colorBalanceMidtonesOne(oldColor.rgb, value, RED_COLOR_TYPE);
+        
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceMidtonesOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+        
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceMidtonesOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
+        result = colorBalanceShadowsOne(oldColor.rgb, value, RED_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceShadowsOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceShadowsOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + RED_COLOR_TYPE)
+        result = colorBalanceLightOne(oldColor.rgb, value, RED_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceLightOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceLightOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+    
+    return vec4(result, 1.0);
 }
 
 #pragma mark - BCS filters (Brightness, Contrast, Saturation)
@@ -102,7 +191,7 @@ vec3 gammaCorrection(vec3 oldColor, float correctionValue)
     
     vec3 interpolColor = vec3(1.0, 1.0, 1.0);
     
-    return mix(interpolColor, oldColor, expositionValue);
+    return mix(interpolColor, oldColor, correctionValue);
 }
 
 #pragma mark - Color balance filters
@@ -116,33 +205,26 @@ vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
     vec3 interpolColor = vec3(oldColor.r, oldColor.g, oldColor.b);
     
     if (colorType == RED_COLOR_TYPE)
-        interpolColor.r = 0.0;
+        interpolColor = vec3(1.0, oldColor.g, oldColor.b);
     
     if (colorType == GREEN_COLOR_TYPE)
-        interpolColor.g = 0.0;
+        interpolColor = vec3(oldColor.r, 1.0, oldColor.b);
     
     if (colorType == BLUE_COLOR_TYPE)
-        interpolColor.b = 0.0;
+        interpolColor = vec3(oldColor.r, oldColor.g, 1.0);
     
-    vec3 result = mix(interpolColor, oldColor, value);
+    vec3 result = mix(interpolColor, oldColor, 2.0 - value);
     
     if (colorType == RED_COLOR_TYPE)
-    {
-        result.g += 1.0 - value;
-        result.b += 1.0 - value;
-    }
+        interpolColor = vec3(result.r, 1.0, 1.0);
     
     if (colorType == GREEN_COLOR_TYPE)
-    {
-        result.r += 1.0 - value;
-        result.b += 1.0 - value;
-    }
+        interpolColor = vec3(1.0, result.g, 1.0);
     
     if (colorType == BLUE_COLOR_TYPE)
-    {
-        result.r += 1.0 - value;
-        result.g += 1.0 - value;
-    }
+        interpolColor = vec3(1.0, 1.0, result.b);
+    
+    result = mix(interpolColor, result, value);
     
     return result;
 }
@@ -150,42 +232,38 @@ vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
 //value = 0.5 - minimal, 1.5 - maximum
 vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType)
 {
-    value = max(value, 0.5);
-    value = min(value, 1.5);
+    value = max(value, 0.0);
+    value = min(value, 2.0);
     
-    if (value > 1.0)
+    vec3 interpolColor;
+    
+    if (value < 1.0)
     {
+        value = 2.0 - value;
         if (colorType == RED_COLOR_TYPE)
-        {
-            oldColor.g += 1.0 - value;
-            oldColor.b += 1.0 - value;
-        }
+            interpolColor = vec3(1.0, oldColor.g, oldColor.b);
         
         if (colorType == GREEN_COLOR_TYPE)
-        {
-            oldColor.r += 1.0 - value;
-            oldColor.b += 1.0 - value;
-        }
+            interpolColor = vec3(oldColor.r, 1.0, oldColor.b);
         
         if (colorType == BLUE_COLOR_TYPE)
-        {
-            oldColor.g += 1.0 - value;
-            oldColor.b += 1.0 - value;
-        }
+            interpolColor = vec3(oldColor.r, oldColor.g, 1.0);
     }
     else
     {
         if (colorType == RED_COLOR_TYPE)
-            oldColor.r += value - 1.0;
+            interpolColor = vec3(oldColor.r, 1.0, 1.0);
         
         if (colorType == GREEN_COLOR_TYPE)
-            oldColor.g += value - 1.0;
+            interpolColor = vec3(1.0, oldColor.g, 1.0);
         
         if (colorType == BLUE_COLOR_TYPE)
-            oldColor.b += value - 1.0;
+            interpolColor = vec3(1.0, 1.0, oldColor.b);
     }
     
-    return oldColor;
+    vec3 result = mix(interpolColor, oldColor, value);
+    
+    return result;
 }
 
 //value = 0.0 - minimal, 2.0 - maximum
