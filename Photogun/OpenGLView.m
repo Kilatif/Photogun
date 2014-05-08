@@ -11,7 +11,7 @@
 #define SQUARE_SIZE 0
 #define SHADER_LOGS 1
 
-static NSString * const VERTEX_SHADER_NAME = @"Default";
+static NSString * const VERTEX_SHADER_NAME = @"Filters";
 static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
 
 static NSString * const SHADER_TYPE_FRAGMENT = @"fsh";

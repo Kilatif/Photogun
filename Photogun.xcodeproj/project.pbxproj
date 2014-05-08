@@ -30,6 +30,7 @@
 		5AF69CF318F443E10048DF44 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */; };
 		5AF69D3918F45F460048DF44 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69D3818F45F460048DF44 /* GLKit.framework */; };
 		5AF69D3B18F45F530048DF44 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AF69D3A18F45F530048DF44 /* OpenGLES.framework */; };
+		5AFF7368191AA6FC00B5137F /* Filters.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AFF7367191AA6FC00B5137F /* Filters.vsh */; };
 		5AFFDEC418FEE2460090D0FD /* Default.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AFFDEC318FEE2460090D0FD /* Default.vsh */; };
 		5AFFDEC718FEE6140090D0FD /* Default.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5AFFDEC218FECA610090D0FD /* Default.fsh */; };
 /* End PBXBuildFile section */
@@ -75,6 +76,7 @@
 		5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
 		5AF69D3818F45F460048DF44 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		5AF69D3A18F45F530048DF44 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		5AFF7367191AA6FC00B5137F /* Filters.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Filters.vsh; sourceTree = "<group>"; };
 		5AFFDEC218FECA610090D0FD /* Default.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; name = Default.fsh; path = Shaders/Default.fsh; sourceTree = "<group>"; };
 		5AFFDEC318FEE2460090D0FD /* Default.vsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Default.vsh; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,6 +179,7 @@
 			children = (
 				5AFFDEC318FEE2460090D0FD /* Default.vsh */,
 				5AFFDEC218FECA610090D0FD /* Default.fsh */,
+				5AFF7367191AA6FC00B5137F /* Filters.vsh */,
 				5216A551190EBD9100D3DFBF /* Contrast.fsh */,
 				5216A55D1914314700D3DFBF /* Blur.vsh */,
 				5216A55B19142F6300D3DFBF /* Blur.fsh */,
@@ -263,6 +266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5AE9A18F18F86882003D03ED /* test_image2.jpg in Resources */,
+				5AFF7368191AA6FC00B5137F /* Filters.vsh in Resources */,
 				5216A552190EBD9100D3DFBF /* Contrast.fsh in Resources */,
 				5AFFDEC418FEE2460090D0FD /* Default.vsh in Resources */,
 				5AF69CCE18F43FDD0048DF44 /* InfoPlist.strings in Resources */,

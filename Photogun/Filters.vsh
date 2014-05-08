@@ -15,9 +15,13 @@
 
 #define BLUR_FILTER_TYPE                14
 
-precision highp float;
+attribute vec4 coord;
+attribute highp vec4 color;
+attribute vec2 tex_coord;
 
-uniform sampler2D texture;
+uniform mat4 projection;
+uniform float filters_values[15];
+uniform int filters_order[15];
 
 varying vec4 color_frag;
 varying vec2 tex_coord_frag;
@@ -26,16 +30,9 @@ varying vec2 coefs_R;
 varying vec2 coefs_G;
 varying vec2 coefs_B;
 
-uniform float filters_values[15];
-uniform int filters_order[15];
-
-uniform float filter_value;
-uniform int filter_id;
-
 #pragma mark - interface
 
-vec3 rgb2hsv(vec3 c);
-vec3 hsv2rgb(vec3 c);
+void getCoefsForFilter(int filterType, float filterValue);
 
 vec3 contrast(vec3 oldColor, float contrastValue);
 vec3 saturation(vec3 oldColor, float saturationValue);
@@ -50,26 +47,60 @@ vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType);
 
 vec4 colorControl(vec4 oldColor);
 vec4 activateFilter(int filterType, vec4 oldColor, float value);
-
-float valueWithCoef(float value, vec2 coef);
-
-#pragma mark - implementation
+void getCoefsForFilters();
 
 void main()
 {
-    vec4 color = texture2D(texture, tex_coord_frag.st);
+    color_frag = color;
+    tex_coord_frag = tex_coord;
     
-    color = vec4(valueWithCoef(color.r, coefs_R), valueWithCoef(color.g, coefs_G), valueWithCoef(color.b, coefs_B), 1.0);
-
-    //color = colorControl(color);
-    //color = activateFilter(filter_id, color, filter_value);
+    getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
     
-    gl_FragColor = color_frag * color;
+    gl_Position = projection * coord;
 }
 
-float valueWithCoef(float value, vec2 coef)
+void getCoefsForFilters()
 {
-    return coef.x + coef.y * value;
+    vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+    float filtersValuesAll = 1.0;
+    
+    for (int i = 0; i < 15; i++)
+    {
+        if (filters_order[i] >= 0)
+        {
+            int filterType = filters_order[i];
+            color = activateFilter(filterType, color, filters_values[filterType]);
+            
+            filtersValuesAll *= filters_values[filterType];
+        }
+    }
+    
+    coefs_R = vec2(color.r - filtersValuesAll, filtersValuesAll);
+    coefs_G = vec2(color.g - filtersValuesAll, filtersValuesAll);
+    coefs_B = vec2(color.b - filtersValuesAll, filtersValuesAll);
+}
+
+void getCoefsForFilter(int filterType, float filterValue)
+{
+    vec3 unitVector = vec3(1.0, 1.0, 1.0);
+    vec3 filteredColor;
+    
+    float realFilterValue = filterValue;
+    
+    if (filterType == CONTRAST_FILTER_TYPE)
+        filteredColor = contrast(unitVector, filterValue);
+    
+    if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
+        filteredColor = colorBalanceShadowsOne(unitVector, filterValue, RED_COLOR_TYPE);
+    
+    if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
+        filteredColor = colorBalanceMidtonesOne(unitVector, filterValue, RED_COLOR_TYPE);
+
+    
+   // filterValue = filterValue * (2.0 - filterValue);
+    coefs_R = vec2(filteredColor.r - filterValue, filterValue);
+    coefs_G = vec2(filteredColor.g - filterValue, filterValue);
+    coefs_B = vec2(filteredColor.b - filterValue, filterValue);
 }
 
 vec4 colorControl(vec4 oldColor)
@@ -110,10 +141,10 @@ vec4 activateFilter(int filterType, vec4 oldColor, float value)
     
     else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
         result = colorBalanceMidtonesOne(oldColor.rgb, value, RED_COLOR_TYPE);
-        
+    
     else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + GREEN_COLOR_TYPE)
         result = colorBalanceMidtonesOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
-        
+    
     else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + BLUE_COLOR_TYPE)
         result = colorBalanceMidtonesOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
     
@@ -167,7 +198,7 @@ vec3 contrast(vec3 oldColor, float contrastValue)
     contrastValue = min(contrastValue, 2.5);
     
     vec3 avgLumin = vec3(0.5, 0.5, 0.5);
-
+    
     return mix(avgLumin, oldColor.rgb, contrastValue);
 }
 

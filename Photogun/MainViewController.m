@@ -56,7 +56,7 @@
 - (IBAction)but2:(id)sender {
 
     [self.imageView setFilterValue:self.colorSlider.value withType:self.filterType.text.intValue];
-   // [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
+    [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
     
     //UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], nil, nil, nil);
   //  [self.imageView loadImageWithImage:[UIImage imageNamed:@"test_image2.jpg"]];
@@ -66,7 +66,7 @@
 {
     [self.imageView setFilterValue:self.colorSlider.value withType:self.filterType.text.intValue];
     
-    //[self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
+    [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
     //[self.imageTest setImage:[self.imageView getGLFrameImage]];
 }
 
