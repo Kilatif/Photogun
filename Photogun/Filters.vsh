@@ -15,6 +15,11 @@
 
 #define BLUR_FILTER_TYPE                14
 
+struct coef {
+    vec3 add;
+    vec3 main;
+};
+
 attribute vec4 coord;
 attribute highp vec4 color;
 attribute vec2 tex_coord;
@@ -32,36 +37,44 @@ varying vec2 coefs_B;
 
 #pragma mark - interface
 
-void getCoefsForFilter(int filterType, float filterValue);
+//void getCoefsForFilter(int filterType, float filterValue);
+coef getCoefsForFilter(int filterType, float filterValue);
 
-vec3 contrast(vec3 oldColor, float contrastValue);
-vec3 saturation(vec3 oldColor, float saturationValue);
-vec3 brightness(vec3 oldColor, float brightnessValue);
+coef contrast(vec3 oldColor, float contrastValue);
+coef saturation(vec3 oldColor, float saturationValue);
+coef brightness(vec3 oldColor, float brightnessValue);
 
-vec3 exposition(vec3 oldColor, float expositionValue);
-vec3 gammaCorrection(vec3 oldColor, float correctionValue);
+coef exposition(vec3 oldColor, float expositionValue);
+coef gammaCorrection(vec3 oldColor, float correctionValue);
 
-vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
-vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType);
-vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType);
+coef colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType);
+coef colorBalanceShadowsOne(vec3 oldColor, float value, int colorType);
+coef colorBalanceLightOne(vec3 oldColor, float value, int colorType);
 
 vec4 colorControl(vec4 oldColor);
 vec4 activateFilter(int filterType, vec4 oldColor, float value);
 void getCoefsForFilters();
+
+coef testFilter(vec3 oldColor, float testValue);
 
 void main()
 {
     color_frag = color;
     tex_coord_frag = tex_coord;
     
-    getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
+    coef tempCoef = getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
+    
+    coefs_R = vec2(tempCoef.add.r, tempCoef.main.r);
+    coefs_G = vec2(tempCoef.add.g, tempCoef.main.g);
+    coefs_B = vec2(tempCoef.add.b, tempCoef.main.b);
+
     
     gl_Position = projection * coord;
 }
 
 void getCoefsForFilters()
 {
-    vec4 color = vec4(1.0, 1.0, 1.0, 1.0);
+    vec4 color = vec4(0.5, 0.5, 0.5, 1.0);
     float filtersValuesAll = 1.0;
     
     for (int i = 0; i < 15; i++)
@@ -80,27 +93,15 @@ void getCoefsForFilters()
     coefs_B = vec2(color.b - filtersValuesAll, filtersValuesAll);
 }
 
-void getCoefsForFilter(int filterType, float filterValue)
+coef getCoefsForFilter(int filterType, float filterValue)
 {
     vec3 unitVector = vec3(1.0, 1.0, 1.0);
-    vec3 filteredColor;
-    
-    float realFilterValue = filterValue;
-    
-    if (filterType == CONTRAST_FILTER_TYPE)
-        filteredColor = contrast(unitVector, filterValue);
+    coef result;
     
     if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
-        filteredColor = colorBalanceShadowsOne(unitVector, filterValue, RED_COLOR_TYPE);
+        result = colorBalanceMidtonesOne(unitVector, filterValue, RED_COLOR_TYPE);
     
-    if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
-        filteredColor = colorBalanceMidtonesOne(unitVector, filterValue, RED_COLOR_TYPE);
-
-    
-   // filterValue = filterValue * (2.0 - filterValue);
-    coefs_R = vec2(filteredColor.r - filterValue, filterValue);
-    coefs_G = vec2(filteredColor.g - filterValue, filterValue);
-    coefs_B = vec2(filteredColor.b - filterValue, filterValue);
+    return result;
 }
 
 vec4 colorControl(vec4 oldColor)
@@ -124,58 +125,73 @@ vec4 activateFilter(int filterType, vec4 oldColor, float value)
     vec3 result;
     
     
-    if (filterType == CONTRAST_FILTER_TYPE)
-        result = contrast(oldColor.rgb, value);
+    //if (filterType == CONTRAST_FILTER_TYPE)
+    //    result = contrast(oldColor.rgb, value);
     
-    else if (filterType == SATURATION_FILTER_TYPE)
-        result = saturation(oldColor.rgb, value);
+    //else if (filterType == SATURATION_FILTER_TYPE)
+    //    result = saturation(oldColor.rgb, value);
     
-    else if (filterType == BRIGHTNESS_FILTER_TYPE)
-        result = brightness(oldColor.rgb, value);
+    //else if (filterType == BRIGHTNESS_FILTER_TYPE)
+    //    result = brightness(oldColor.rgb, value);
     
-    else if (filterType == EXPOSITION_FILTER_TYPE)
-        result = exposition(oldColor.rgb, value);
+    //if (filterType == EXPOSITION_FILTER_TYPE)
+   //     result = exposition(oldColor.rgb, value);
     
-    else if (filterType == GAMMA_CORRECTION_FILTER_TYPE)
-        result = gammaCorrection(oldColor.rgb, value);
+   // else if (filterType == GAMMA_CORRECTION_FILTER_TYPE)
+   //     result = gammaCorrection(oldColor.rgb, value);
     
-    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
-        result = colorBalanceMidtonesOne(oldColor.rgb, value, RED_COLOR_TYPE);
+   // if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
+    //    result = colorBalanceMidtonesOne(oldColor.rgb, value, RED_COLOR_TYPE);
     
-    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + GREEN_COLOR_TYPE)
-        result = colorBalanceMidtonesOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+    //else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + GREEN_COLOR_TYPE)
+     //   result = colorBalanceMidtonesOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
     
-    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + BLUE_COLOR_TYPE)
-        result = colorBalanceMidtonesOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+   // else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + BLUE_COLOR_TYPE)
+   //     result = colorBalanceMidtonesOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
     
-    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
-        result = colorBalanceShadowsOne(oldColor.rgb, value, RED_COLOR_TYPE);
+   // else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
+    //    result = colorBalanceShadowsOne(oldColor.rgb, value, RED_COLOR_TYPE);
     
-    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + GREEN_COLOR_TYPE)
-        result = colorBalanceShadowsOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+   // else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + GREEN_COLOR_TYPE)
+   //     result = colorBalanceShadowsOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
+   //
+  //  else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + BLUE_COLOR_TYPE)
+    //    result = colorBalanceShadowsOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
     
-    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + BLUE_COLOR_TYPE)
-        result = colorBalanceShadowsOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+    //else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + RED_COLOR_TYPE)
+    //    result = colorBalanceLightOne(oldColor.rgb, value, RED_COLOR_TYPE);
     
-    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + RED_COLOR_TYPE)
-        result = colorBalanceLightOne(oldColor.rgb, value, RED_COLOR_TYPE);
+    //else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + GREEN_COLOR_TYPE)
+   //     result = colorBalanceLightOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
     
-    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + GREEN_COLOR_TYPE)
-        result = colorBalanceLightOne(oldColor.rgb, value, GREEN_COLOR_TYPE);
-    
-    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + BLUE_COLOR_TYPE)
-        result = colorBalanceLightOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
+    //else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + BLUE_COLOR_TYPE)
+    //    result = colorBalanceLightOne(oldColor.rgb, value, BLUE_COLOR_TYPE);
     
     return vec4(result, 1.0);
+}
+
+coef testFilter(vec3 oldColor, float testValue)
+{
+    coef result;
+    vec3 interpol = vec3(0.0, 1.0, 0.0);
+    vec3 filterResult = mix(interpol, oldColor, testValue);
+    
+    result.add = filterResult - testValue;
+    result.main = vec3(testValue);
+    
+    return result;
 }
 
 #pragma mark - BCS filters (Brightness, Contrast, Saturation)
 
 //brightnessValue = 0.0 - minimal, 2.0 = maximum
-vec3 brightness(vec3 oldColor, float brightnessValue)
+coef brightness(vec3 oldColor, float brightnessValue)
 {
     brightnessValue = max(brightnessValue, 0.0);
     brightnessValue = min(brightnessValue, 2.0);
+    
+    coef result;
+    vec3 filterResult;
     
     vec3 avgLumin;
     
@@ -187,23 +203,36 @@ vec3 brightness(vec3 oldColor, float brightnessValue)
     else
         avgLumin = vec3(0.0, 0.0, 0.0);
     
-    return mix(avgLumin, oldColor.rgb, brightnessValue);
+    filterResult = mix(avgLumin, oldColor.rgb, brightnessValue);
+    
+    result.add = filterResult - brightnessValue;
+    result.main = vec3(brightnessValue);
+    
+    return result;
 }
 
 
 //contrastValue = 0.5 - minimal, 2.5 = maximum
-vec3 contrast(vec3 oldColor, float contrastValue)
+coef contrast(vec3 oldColor, float contrastValue)
 {
     contrastValue = max(contrastValue, 0.5);
     contrastValue = min(contrastValue, 2.5);
     
     vec3 avgLumin = vec3(0.5, 0.5, 0.5);
     
-    return mix(avgLumin, oldColor.rgb, contrastValue);
+    coef result;
+    vec3 filterResult;
+    
+    filterResult = mix(avgLumin, oldColor.rgb, contrastValue);
+    
+    result.add = filterResult - contrastValue;
+    result.main = vec3(contrastValue);
+    
+    return result;
 }
 
 //saturationValue = 0.0 - minimal, 2.0 - maximum
-vec3 saturation(vec3 oldColor, float saturationValue)
+coef saturation(vec3 oldColor, float saturationValue)
 {
     saturationValue = max(saturationValue, 0.0);
     saturationValue = min(saturationValue, 2.0);
@@ -211,138 +240,199 @@ vec3 saturation(vec3 oldColor, float saturationValue)
     vec3 lumCoeff = vec3(0.2155, 0.7154, 0.0721);
     vec3 intensity = vec3(dot(oldColor, lumCoeff));
     
-    return mix(intensity, oldColor, saturationValue);
+    coef result;
+    vec3 filterResult = mix(intensity, oldColor, saturationValue);
+    
+    result.add = filterResult - saturationValue;
+    result.main = vec3(saturationValue);
+    
+    return result;
 }
 
 #pragma mark - Exposition and Gamma-Correction
 
-//expositionValue = 0.5 - minimal, 1.5 - maximal
-vec3 exposition(vec3 oldColor, float expositionValue)
+//expositionValue = 0.0 - minimal, 2.0 - maximal
+coef exposition(vec3 oldColor, float expositionValue)
 {
-    expositionValue = max(expositionValue, 0.5);
-    expositionValue = min(expositionValue, 1.5);
+    expositionValue = max(expositionValue, 0.0);
+    expositionValue = min(expositionValue, 2.0);
     
     vec3 interpolColor = vec3(0.0, 0.0, 0.0);
     
-    return mix(interpolColor, oldColor, expositionValue);
+    coef result;
+    vec3 filterResult = mix(interpolColor, oldColor, expositionValue);
+    
+    result.add = filterResult - expositionValue;
+    result.main = vec3(expositionValue);
+    
+    return result;
 }
 
 //expositionValue = 0.5 - minimal, 1.5 - maximal
-vec3 gammaCorrection(vec3 oldColor, float correctionValue)
+coef gammaCorrection(vec3 oldColor, float correctionValue)
 {
     correctionValue = max(correctionValue, 0.5);
     correctionValue = min(correctionValue, 1.5);
     
     vec3 interpolColor = vec3(1.0, 1.0, 1.0);
     
-    return mix(interpolColor, oldColor, correctionValue);
+    coef result;
+    vec3 filterResult = mix(interpolColor, oldColor, correctionValue);
+    
+    result.add = filterResult - correctionValue;
+    result.main = vec3(correctionValue);
+    
+    return result;
 }
 
 #pragma mark - Color balance filters
 
 //value = 0.5 - minimal, 1.5 - maximum
-vec3 colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
+coef colorBalanceMidtonesOne(vec3 oldColor, float value, int colorType)
 {
     value = max(value, 0.5);
     value = min(value, 1.5);
     
-    vec3 interpolColor = vec3(oldColor.r, oldColor.g, oldColor.b);
+    coef gammaColor = gammaCorrection(oldColor, 2.0 - value);
+    coef gammaOther = gammaCorrection(oldColor, value);
     
     if (colorType == RED_COLOR_TYPE)
-        interpolColor = vec3(1.0, oldColor.g, oldColor.b);
+    {
+        gammaOther.add.r = gammaColor.add.r;
+        gammaOther.main.r = gammaColor.main.r;
+    }
     
     if (colorType == GREEN_COLOR_TYPE)
-        interpolColor = vec3(oldColor.r, 1.0, oldColor.b);
+    {
+        gammaOther.add.g = gammaColor.add.g;
+        gammaOther.main.g = gammaColor.main.g;
+    }
     
     if (colorType == BLUE_COLOR_TYPE)
-        interpolColor = vec3(oldColor.r, oldColor.g, 1.0);
+    {
+        gammaOther.add.b = gammaColor.add.b;
+        gammaOther.main.b = gammaColor.main.b;
+    }
     
-    vec3 result = mix(interpolColor, oldColor, 2.0 - value);
-    
-    if (colorType == RED_COLOR_TYPE)
-        interpolColor = vec3(result.r, 1.0, 1.0);
-    
-    if (colorType == GREEN_COLOR_TYPE)
-        interpolColor = vec3(1.0, result.g, 1.0);
-    
-    if (colorType == BLUE_COLOR_TYPE)
-        interpolColor = vec3(1.0, 1.0, result.b);
-    
-    result = mix(interpolColor, result, value);
-    
-    return result;
+    return gammaOther;
 }
 
 //value = 0.5 - minimal, 1.5 - maximum
-vec3 colorBalanceShadowsOne(vec3 oldColor, float value, int colorType)
+coef colorBalanceShadowsOne(vec3 oldColor, float value, int colorType)
 {
     value = max(value, 0.0);
     value = min(value, 2.0);
     
-    vec3 interpolColor;
+    vec3 interpolColor = vec3(1.0, 1.0, 1.0);
+    vec3 filterResult;
+    coef result;
+    
+    result.add = vec3(0.0);
+    result.main = vec3(1.0);
     
     if (value < 1.0)
     {
         value = 2.0 - value;
+        filterResult = mix(interpolColor, oldColor, value);
         if (colorType == RED_COLOR_TYPE)
-            interpolColor = vec3(1.0, oldColor.g, oldColor.b);
+        {
+            result.add = vec3(filterResult.r - value, 0.0, 0.0);
+            result.main = vec3(value, 1.0, 1.0);
+        }
         
         if (colorType == GREEN_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, 1.0, oldColor.b);
+        {
+            result.add = vec3(0.0, filterResult.g - value, 0.0);
+            result.main = vec3(1.0, value, 1.0);
+        }
         
         if (colorType == BLUE_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, oldColor.g, 1.0);
+        {
+            result.add = vec3(0.0, 0.0, filterResult.b - value);
+            result.main = vec3(1.0, 1.0, value);
+        }
     }
     else
     {
+        filterResult = mix(interpolColor, oldColor, value);
         if (colorType == RED_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, 1.0, 1.0);
+        {
+            result.add = vec3(0.0, filterResult.g - value, filterResult.b - value);
+            result.main = vec3(1.0, value, value);
+        }
         
         if (colorType == GREEN_COLOR_TYPE)
-            interpolColor = vec3(1.0, oldColor.g, 1.0);
+        {
+            result.add = vec3(filterResult.r - value, 0.0, filterResult.b - value);
+            result.main = vec3(value, 1.0, value);
+        }
         
         if (colorType == BLUE_COLOR_TYPE)
-            interpolColor = vec3(1.0, 1.0, oldColor.b);
+        {
+            result.add = vec3(filterResult.r - value, filterResult.g - value, 0.0);
+            result.main = vec3(value, value, 1.0);
+        }
     }
-    
-    vec3 result = mix(interpolColor, oldColor, value);
     
     return result;
 }
 
 //value = 0.0 - minimal, 2.0 - maximum
-vec3 colorBalanceLightOne(vec3 oldColor, float value, int colorType)
+coef colorBalanceLightOne(vec3 oldColor, float value, int colorType)
 {
     value = max(value, 0.0);
     value = min(value, 2.0);
     
-    vec3 interpolColor;
+    vec3 interpolColor = vec3(0.0, 0.0, 0.0);
+    vec3 filterResult;
+    coef result;
+    
+    result.add = vec3(0.0);
+    result.main = vec3(1.0);
     
     if (value > 1.0)
     {
+        filterResult = mix(interpolColor, oldColor, value);
         if (colorType == RED_COLOR_TYPE)
-            interpolColor = vec3(0.0, oldColor.g, oldColor.b);
+        {
+            result.add = vec3(filterResult.r - value, 0.0, 0.0);
+            result.main = vec3(value, 1.0, 1.0);
+        }
         
         if (colorType == GREEN_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, 0.0, oldColor.b);
+        {
+            result.add = vec3(0.0, filterResult.g - value, 0.0);
+            result.main = vec3(1.0, value, 1.0);
+        }
         
         if (colorType == BLUE_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, oldColor.g, 0.0);
+        {
+            result.add = vec3(0.0, 0.0, filterResult.b - value);
+            result.main = vec3(1.0, 1.0, value);
+        }
     }
     else
     {
         value = 2.0 - value;
+        filterResult = mix(interpolColor, oldColor, value);
         if (colorType == RED_COLOR_TYPE)
-            interpolColor = vec3(oldColor.r, 0.0, 0.0);
+        {
+            result.add = vec3(0.0, filterResult.g - value, filterResult.b - value);
+            result.main = vec3(1.0, value, value);
+        }
         
         if (colorType == GREEN_COLOR_TYPE)
-            interpolColor = vec3(0.0, oldColor.g, 0.0);
+        {
+            result.add = vec3(filterResult.r - value, 0.0, filterResult.b - value);
+            result.main = vec3(value, 1.0, value);
+        }
         
         if (colorType == BLUE_COLOR_TYPE)
-            interpolColor = vec3(0.0, 0.0, oldColor.b);
+        {
+            result.add = vec3(filterResult.r - value, filterResult.g - value, 0.0);
+            result.main = vec3(value, value, 1.0);
+        }
     }
-    
-    vec3 result = mix(interpolColor, oldColor, value);
     
     return result;
 }
