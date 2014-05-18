@@ -53,7 +53,7 @@ coef colorBalanceLightOne(vec3 oldColor, float value, int colorType);
 
 vec4 colorControl(vec4 oldColor);
 vec4 activateFilter(int filterType, vec4 oldColor, float value);
-void getCoefsForFilters();
+coef getCoefsForFilters();
 
 coef testFilter(vec3 oldColor, float testValue);
 
@@ -62,7 +62,8 @@ void main()
     color_frag = color;
     tex_coord_frag = tex_coord;
     
-    coef tempCoef = getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
+    //coef tempCoef = getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
+    coef tempCoef = getCoefsForFilters();
     
     coefs_R = vec2(tempCoef.add.r, tempCoef.main.r);
     coefs_G = vec2(tempCoef.add.g, tempCoef.main.g);
@@ -72,25 +73,27 @@ void main()
     gl_Position = projection * coord;
 }
 
-void getCoefsForFilters()
+coef getCoefsForFilters()
 {
-    vec4 color = vec4(0.5, 0.5, 0.5, 1.0);
-    float filtersValuesAll = 1.0;
+    coef filtersCoef;
+    
+    filtersCoef.add = vec3(0.0);
+    filtersCoef.main = vec3(1.0);
     
     for (int i = 0; i < 15; i++)
     {
         if (filters_order[i] >= 0)
         {
             int filterType = filters_order[i];
-            color = activateFilter(filterType, color, filters_values[filterType]);
+            coef curentResult = getCoefsForFilter(filterType, filters_values[filterType]);
+  //          color = activateFilter(filterType, color, filters_values[filterType]);
             
-            filtersValuesAll *= filters_values[filterType];
+            filtersCoef.add = filtersCoef.add * curentResult.main + curentResult.add;
+            filtersCoef.main *= curentResult.main;
         }
     }
     
-    coefs_R = vec2(color.r - filtersValuesAll, filtersValuesAll);
-    coefs_G = vec2(color.g - filtersValuesAll, filtersValuesAll);
-    coefs_B = vec2(color.b - filtersValuesAll, filtersValuesAll);
+    return filtersCoef;
 }
 
 coef getCoefsForFilter(int filterType, float filterValue)
@@ -98,8 +101,47 @@ coef getCoefsForFilter(int filterType, float filterValue)
     vec3 unitVector = vec3(1.0, 1.0, 1.0);
     coef result;
     
-    if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
+    if (filterType == CONTRAST_FILTER_TYPE)
+        result = contrast(unitVector, filterValue);
+    
+    else if (filterType == SATURATION_FILTER_TYPE)
+        result = saturation(unitVector, filterValue);
+    
+    else if (filterType == BRIGHTNESS_FILTER_TYPE)
+        result = brightness(unitVector, filterValue);
+    
+    else if (filterType == EXPOSITION_FILTER_TYPE)
+        result = exposition(unitVector, filterValue);
+    
+    else if (filterType == GAMMA_CORRECTION_FILTER_TYPE)
+        result = gammaCorrection(unitVector, filterValue);
+    
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + RED_COLOR_TYPE)
         result = colorBalanceMidtonesOne(unitVector, filterValue, RED_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceMidtonesOne(unitVector, filterValue, GREEN_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_MIDTONES_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceMidtonesOne(unitVector, filterValue, BLUE_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + RED_COLOR_TYPE)
+        result = colorBalanceShadowsOne(unitVector, filterValue, RED_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceShadowsOne(unitVector, filterValue, GREEN_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_SHADOWS_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceShadowsOne(unitVector, filterValue, BLUE_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + RED_COLOR_TYPE)
+        result = colorBalanceLightOne(unitVector, filterValue, RED_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + GREEN_COLOR_TYPE)
+        result = colorBalanceLightOne(unitVector, filterValue, GREEN_COLOR_TYPE);
+    
+    else if (filterType == BALANCE_LIGHTS_FILTER_TYPE + BLUE_COLOR_TYPE)
+        result = colorBalanceLightOne(unitVector, filterValue, BLUE_COLOR_TYPE);
     
     return result;
 }
