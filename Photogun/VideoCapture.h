@@ -10,14 +10,24 @@
 #import <AVFoundation/AVFoundation.h>
 
 @protocol VideoCaptureDelegate;
+@protocol ImageCaptureDelegate;
 
 @interface VideoCapture : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (nonatomic, readonly) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (nonatomic, assign) id<VideoCaptureDelegate> delegate;
+@property (nonatomic, assign) id<ImageCaptureDelegate> imageDelegate;
 
 - (void)startCapture;
 - (void)stopCapture;
+- (void)setDeviceFocus:(CGPoint)focus;
+- (void)captureImage;
+
+@end
+
+@protocol ImageCaptureDelegate
+
+- (void)imageCaptured:(UIImage *)capturedImage;
 
 @end
 

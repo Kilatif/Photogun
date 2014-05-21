@@ -15,6 +15,8 @@ typedef enum : NSUInteger {
     HistogramBlueChannel,
 } HistogramType;
 
+@protocol OpenGLViewDelegate;
+
 @interface OpenGLView : UIView <VideoCaptureDelegate> {
     
     GLuint _renderBufferID;
@@ -30,6 +32,7 @@ typedef enum : NSUInteger {
 
 @property (nonatomic, assign) CAEAGLLayer *eaglLayer;
 @property (nonatomic, strong) EAGLContext *context;
+@property (nonatomic, assign) id<OpenGLViewDelegate> delegate;
 
 - (void)loadImageWithName:(NSString *)name;
 - (void)loadImageWithImage:(UIImage *)image;
@@ -39,5 +42,11 @@ typedef enum : NSUInteger {
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType;
 
 - (void)setFilterValue:(float)value withType:(int)type;
+
+@end
+
+@protocol OpenGLViewDelegate <NSObject>
+
+- (void)touchedView:(NSSet *)touches withEvent:(UIEvent *)event;
 
 @end

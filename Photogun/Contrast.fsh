@@ -59,11 +59,10 @@ void main()
 {
     vec4 color = texture2D(texture, tex_coord_frag.st);
     
-    color = vec4(valueWithCoef(color.r, coefs_R), valueWithCoef(color.g, coefs_G), valueWithCoef(color.b, coefs_B), 1.0);
+    color = vec4(valueWithCoef(color.r, coefs_R),
+                 valueWithCoef(color.g, coefs_G),
+                 valueWithCoef(color.b, coefs_B), 1.0);
 
-    //color = colorControl(color);
-    //color = activateFilter(filter_id, color, filter_value);
-    
     gl_FragColor = color_frag * color;
 }
 

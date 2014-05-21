@@ -55,8 +55,6 @@ VertexData vertices[] = {
             filtersValues[i] = 1;
         }
         
-       
-        
         self.eaglLayer = (CAEAGLLayer*) self.layer;
         self.eaglLayer.opaque = YES;
         
@@ -68,15 +66,8 @@ VertexData vertices[] = {
         [self initializeScene];
         [self prepareScene];
         
-         filtersOrder[0] = 0;
-        filtersOrder[1] = 1;
-        filtersOrder[2] = 2;
-        filtersOrder[3] = 3;
-        filtersOrder[4] = 4;
-         filtersOrder[5] = 5;
-         filtersOrder[6] = 6;
-          filtersOrder[7] = 7;
-          filtersOrder[8] = 8;
+        for (int i = 0; i < 13; i++)
+            filtersOrder[i] = i;
         
         GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
         glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
@@ -488,6 +479,12 @@ VertexData vertices[] = {
     
     if (self.isFrameFreeze)
         [self render];
+}
+
+- (void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (self.delegate)
+        [self.delegate touchedView:touches withEvent:event];
 }
 
 

@@ -11,7 +11,7 @@
 #import "VideoCapture.h"
 #import "HistogramImageView.h"
 
-@interface MainViewController : UIViewController
+@interface MainViewController : UIViewController <OpenGLViewDelegate, ImageCaptureDelegate>
 
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
 @property (strong, nonatomic) IBOutlet UISlider *colorSlider;
