@@ -38,7 +38,10 @@ typedef enum : NSUInteger {
 - (void)loadImageWithImage:(UIImage *)image;
 
 - (NSData *)getGLFramePixelData;
+
+- (UIImage *)getGLFrameImageWithRect:(CGRect)imageRect;
 - (UIImage *)getGLFrameImage;
+
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType;
 
 - (void)setFilterValue:(float)value withType:(int)type;

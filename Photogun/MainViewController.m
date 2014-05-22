@@ -21,7 +21,8 @@
 {
     [super viewDidLoad];
     
-    self.imageTest.alpha = 0.7f;
+   // [self.test setMaximumTrackTintColor:[UIColor redColor]];
+    self.imageHisto.alpha = 0.7f;
     self.imageView.delegate = self;
     
     self.videoCapture = [[VideoCapture alloc] init];
@@ -33,6 +34,7 @@
 
 #pragma mark - UIComponents actions
 
+/*
 - (IBAction)but2:(id)sender {
     [self.videoCapture captureImage];
 }
@@ -42,7 +44,6 @@
     [self.imageView setFilterValue:self.colorSlider.value withType:self.filterType.text.intValue];
     
     [self.imageTest setHistogramImageWithData:[self.imageView getGLFramePixelData]];
-    //[self.imageTest setImage:[self.imageView getGLFrameImage]];
 }
 
 - (IBAction)frameFreeze:(UISwitch *)sender
@@ -54,7 +55,7 @@
 
 - (IBAction)textReturn:(UITextField *)sender {
     [sender resignFirstResponder];
-}
+}*/
 
 - (void)touchedView:(NSSet *)touches withEvent:(UIEvent *)event
 {
@@ -71,6 +72,9 @@
 {
     [self.videoCapture stopCapture];
     [self.imageView loadImageWithImage:capturedImage];
+}
+- (IBAction)testSwipe:(id)sender {
+    NSLog(@"testSwipe");
 }
 
 @end

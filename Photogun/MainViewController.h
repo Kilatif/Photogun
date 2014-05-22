@@ -13,9 +13,7 @@
 
 @interface MainViewController : UIViewController <OpenGLViewDelegate, ImageCaptureDelegate>
 
+@property (strong, nonatomic) IBOutlet UISlider *test;
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
-@property (strong, nonatomic) IBOutlet UISlider *colorSlider;
-@property (strong, nonatomic) IBOutlet HistogramImageView *imageTest;
-@property (strong, nonatomic) IBOutlet UITextField *filterType;
-
+@property (strong, nonatomic) IBOutlet HistogramImageView *imageHisto;
 @end

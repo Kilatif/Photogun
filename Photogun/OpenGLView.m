@@ -37,6 +37,12 @@ VertexData vertices[] = {
     
 };
 
+@interface OpenGLView()
+
+@property (nonatomic, assign) CGSize resolution;
+
+@end
+
 @implementation OpenGLView
 
 @synthesize eaglLayer;
@@ -54,6 +60,8 @@ VertexData vertices[] = {
             filtersOrder[i] = -1;
             filtersValues[i] = 1;
         }
+        
+        self.resolution = self.frame.size;
         
         self.eaglLayer = (CAEAGLLayer*) self.layer;
         self.eaglLayer.opaque = YES;
@@ -119,7 +127,7 @@ VertexData vertices[] = {
     
     glViewport(0, 0, self.frame.size.width, self.frame.size.height);
     
-    GLKMatrix4 projection = GLKMatrix4MakeOrtho(0, self.frame.size.width, 0, self.frame.size.height, -10, 10);
+    GLKMatrix4 projection = GLKMatrix4MakeOrtho(0, self.resolution.width, 0, self.resolution.height, -10, 10);
     
     GLuint vertPosAttr = glGetAttribLocation(_shaderProgramID, "coord");
     GLuint vertColorAttr = glGetAttribLocation(_shaderProgramID, "color");
@@ -216,29 +224,36 @@ VertexData vertices[] = {
 
 - (void)reloadVerticesForImageSize:(CGSize)imageSize
 {
-    float glViewWidth = self.frame.size.width;
-    float glViewHeight = self.frame.size.height;
+    self.resolution = self.frame.size;
+    
+    float glViewWidth = self.resolution.width;
+    float glViewHeight = self.resolution.height;
     
     //Calculate size different between image and glView
-    float sizeDiff = (imageSize.width > imageSize.height) ? glViewWidth / imageSize.width : glViewHeight / imageSize.height;
+    float sizeDiff = (imageSize.width > imageSize.height) ? imageSize.width / glViewWidth : imageSize.height / glViewHeight;
+    
+    glViewHeight = (sizeDiff > 1) ? glViewHeight * sizeDiff : glViewHeight;
+    glViewWidth = (sizeDiff > 1) ? glViewWidth * sizeDiff : glViewWidth;
     
     //scaling image size, considering sizeDiff
-    float imageWidth = (sizeDiff < 1) ? imageSize.width * sizeDiff : imageSize.width;
-    float imageHeight = (sizeDiff < 1) ? imageSize.height * sizeDiff : imageSize.height;
+    //float imageWidth = (sizeDiff < 1) ? imageSize.width * sizeDiff : imageSize.width;
+    //float imageHeight = (sizeDiff < 1) ? imageSize.height * sizeDiff : imageSize.height;
     
-    GLKVector2 startPoint = {glViewWidth / 2 - imageWidth / 2, glViewHeight / 2 - imageHeight / 2};
+    self.resolution = CGSizeMake(glViewWidth, glViewHeight);
+    GLKVector2 startPoint = {glViewWidth / 2 - imageSize.width / 2,
+                             glViewHeight / 2 - imageSize.height / 2};
     
      vertices[0].posCoord.x = startPoint.x;
      vertices[0].posCoord.y = startPoint.y;
      
-     vertices[1].posCoord.x = startPoint.x + imageWidth;
+     vertices[1].posCoord.x = startPoint.x + imageSize.width;
      vertices[1].posCoord.y = startPoint.y;
      
      vertices[2].posCoord.x = startPoint.x;
-     vertices[2].posCoord.y = startPoint.y + imageHeight;
+     vertices[2].posCoord.y = startPoint.y + imageSize.height;
      
-     vertices[3].posCoord.x = startPoint.x + imageWidth;
-     vertices[3].posCoord.y = startPoint.y + imageHeight;
+     vertices[3].posCoord.x = startPoint.x + imageSize.width;
+     vertices[3].posCoord.y = startPoint.y + imageSize.height;
      
      glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
@@ -405,13 +420,11 @@ VertexData vertices[] = {
     return result;
 }
 
-- (UIImage *)getGLFrameImage
+- (UIImage *)getGLFrameImageWithRect:(CGRect)imageRect
 {
     if (!self.isFrameFreeze)
         return nil;
-    
-    CGRect imageRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
-    
+
     int width = imageRect.size.width;
     int height = imageRect.size.height;
     
@@ -426,8 +439,14 @@ VertexData vertices[] = {
     
     CGContextRelease(contextRef);
     CGColorSpaceRelease(colorSpaceRef);
-
+    
     return image;
+}
+
+- (UIImage *)getGLFrameImage
+{
+    CGRect imageRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    return [self getGLFrameImageWithRect:imageRect];
 }
 
 #pragma mark - Histogram functions

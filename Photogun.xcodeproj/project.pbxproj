@@ -13,6 +13,8 @@
 		5216A55E1914314700D3DFBF /* Blur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A55D1914314700D3DFBF /* Blur.vsh */; };
 		5247057E1928289F00CF8619 /* Vignette.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5247057D1928289F00CF8619 /* Vignette.fsh */; };
 		52534CD91903046100505CC2 /* OpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52534CD81903046100505CC2 /* OpenGLView.m */; };
+		52A29B5F192D5BA900F4CFA6 /* ic_camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 52A29B5E192D5BA900F4CFA6 /* ic_camera.png */; };
+		52A29B61192D6CC700F4CFA6 /* icon-svg.png in Resources */ = {isa = PBXBuildFile; fileRef = 52A29B60192D6CC700F4CFA6 /* icon-svg.png */; };
 		5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5AB5A31618F5999700356ED5 /* MainViewController.m */; };
 		5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18C18F8485A003D03ED /* test_image.jpg */; };
 		5AE9A18F18F86882003D03ED /* test_image2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5AE9A18E18F86882003D03ED /* test_image2.jpg */; };
@@ -55,6 +57,8 @@
 		5247057D1928289F00CF8619 /* Vignette.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Vignette.fsh; sourceTree = "<group>"; };
 		52534CD71903046100505CC2 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		52534CD81903046100505CC2 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
+		52A29B5E192D5BA900F4CFA6 /* ic_camera.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_camera.png; sourceTree = "<group>"; };
+		52A29B60192D6CC700F4CFA6 /* icon-svg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-svg.png"; sourceTree = "<group>"; };
 		5AB5A31518F5999700356ED5 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		5AB5A31618F5999700356ED5 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		5AE9A18C18F8485A003D03ED /* test_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test_image.jpg; sourceTree = "<group>"; };
@@ -165,6 +169,8 @@
 		5AF69CCA18F43FDD0048DF44 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				52A29B60192D6CC700F4CFA6 /* icon-svg.png */,
+				52A29B5E192D5BA900F4CFA6 /* ic_camera.png */,
 				5AF69CD518F43FDD0048DF44 /* Images.xcassets */,
 				5AF69CCB18F43FDD0048DF44 /* Photogun-Info.plist */,
 				5AF69CCC18F43FDD0048DF44 /* InfoPlist.strings */,
@@ -274,10 +280,12 @@
 				5AFFDEC418FEE2460090D0FD /* Default.vsh in Resources */,
 				5AF69CCE18F43FDD0048DF44 /* InfoPlist.strings in Resources */,
 				5247057E1928289F00CF8619 /* Vignette.fsh in Resources */,
+				52A29B5F192D5BA900F4CFA6 /* ic_camera.png in Resources */,
 				5216A55C19142F6300D3DFBF /* Blur.fsh in Resources */,
 				5AF69CD618F43FDD0048DF44 /* Images.xcassets in Resources */,
 				5AFFDEC718FEE6140090D0FD /* Default.fsh in Resources */,
 				5216A55E1914314700D3DFBF /* Blur.vsh in Resources */,
+				52A29B61192D6CC700F4CFA6 /* icon-svg.png in Resources */,
 				5AF69CF318F443E10048DF44 /* MainStoryboard.storyboard in Resources */,
 				5AE9A18D18F8485A003D03ED /* test_image.jpg in Resources */,
 			);
