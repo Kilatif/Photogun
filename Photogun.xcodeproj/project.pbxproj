@@ -11,6 +11,7 @@
 		5216A55A19107DE700D3DFBF /* HistogramImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5216A55919107DE700D3DFBF /* HistogramImageView.m */; };
 		5216A55C19142F6300D3DFBF /* Blur.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A55B19142F6300D3DFBF /* Blur.fsh */; };
 		5216A55E1914314700D3DFBF /* Blur.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 5216A55D1914314700D3DFBF /* Blur.vsh */; };
+		522A3F70192EA719004A25D6 /* ContextOptionsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 522A3F6F192EA719004A25D6 /* ContextOptionsView.m */; };
 		5247057E1928289F00CF8619 /* Vignette.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 5247057D1928289F00CF8619 /* Vignette.fsh */; };
 		52534CD91903046100505CC2 /* OpenGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = 52534CD81903046100505CC2 /* OpenGLView.m */; };
 		52A29B5F192D5BA900F4CFA6 /* ic_camera.png in Resources */ = {isa = PBXBuildFile; fileRef = 52A29B5E192D5BA900F4CFA6 /* ic_camera.png */; };
@@ -54,6 +55,8 @@
 		5216A55919107DE700D3DFBF /* HistogramImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistogramImageView.m; sourceTree = "<group>"; };
 		5216A55B19142F6300D3DFBF /* Blur.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Blur.fsh; sourceTree = "<group>"; };
 		5216A55D1914314700D3DFBF /* Blur.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Blur.vsh; sourceTree = "<group>"; };
+		522A3F6E192EA719004A25D6 /* ContextOptionsView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextOptionsView.h; sourceTree = "<group>"; };
+		522A3F6F192EA719004A25D6 /* ContextOptionsView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextOptionsView.m; sourceTree = "<group>"; };
 		5247057D1928289F00CF8619 /* Vignette.fsh */ = {isa = PBXFileReference; explicitFileType = sourcecode.glsl; fileEncoding = 4; path = Vignette.fsh; sourceTree = "<group>"; };
 		52534CD71903046100505CC2 /* OpenGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLView.h; sourceTree = "<group>"; };
 		52534CD81903046100505CC2 /* OpenGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenGLView.m; sourceTree = "<group>"; };
@@ -149,19 +152,21 @@
 		5AF69CC918F43FDD0048DF44 /* Photogun */ = {
 			isa = PBXGroup;
 			children = (
-				52534CD71903046100505CC2 /* OpenGLView.h */,
-				52534CD81903046100505CC2 /* OpenGLView.m */,
 				5AFFDEBF18FEC9E30090D0FD /* Shaders */,
 				5AF69CCA18F43FDD0048DF44 /* Supporting Files */,
 				5AF69CD218F43FDD0048DF44 /* AppDelegate.h */,
 				5AF69CD318F43FDD0048DF44 /* AppDelegate.m */,
-				5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */,
-				5AB5A31518F5999700356ED5 /* MainViewController.h */,
-				5AB5A31618F5999700356ED5 /* MainViewController.m */,
+				52534CD71903046100505CC2 /* OpenGLView.h */,
+				52534CD81903046100505CC2 /* OpenGLView.m */,
 				5AECF0001906C82600D5F574 /* VideoCapture.h */,
 				5AECF0011906C82600D5F574 /* VideoCapture.m */,
 				5216A55819107DE700D3DFBF /* HistogramImageView.h */,
 				5216A55919107DE700D3DFBF /* HistogramImageView.m */,
+				522A3F6E192EA719004A25D6 /* ContextOptionsView.h */,
+				522A3F6F192EA719004A25D6 /* ContextOptionsView.m */,
+				5AB5A31518F5999700356ED5 /* MainViewController.h */,
+				5AB5A31618F5999700356ED5 /* MainViewController.m */,
+				5AF69CF218F443E10048DF44 /* MainStoryboard.storyboard */,
 			);
 			path = Photogun;
 			sourceTree = "<group>";
@@ -308,6 +313,7 @@
 				5AECF0021906C82600D5F574 /* VideoCapture.m in Sources */,
 				5AF69CD418F43FDD0048DF44 /* AppDelegate.m in Sources */,
 				5AB5A31718F5999700356ED5 /* MainViewController.m in Sources */,
+				522A3F70192EA719004A25D6 /* ContextOptionsView.m in Sources */,
 				5216A55A19107DE700D3DFBF /* HistogramImageView.m in Sources */,
 				5AF69CD018F43FDD0048DF44 /* main.m in Sources */,
 				52534CD91903046100505CC2 /* OpenGLView.m in Sources */,
