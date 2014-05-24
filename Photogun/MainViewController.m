@@ -43,7 +43,7 @@
                                [ContextOptionsView SLIDER_MAX_COLOR] : [UIColor colorWithRed:0.0f green:0.78f blue:0.78f alpha:1.0f]};
     
     self.shadowsConetxtView = [[ContextOptionsView alloc] initWithFrame:CGRectMake(0, 30, 320, 210)
-                                                          andComponents:@[redValue, greenValue]];
+                                                          andComponents:@[redValue, greenValue, blueValue]];
     [self.view addSubview:self.shadowsConetxtView];
     
    // [self.test setMaximumTrackTintColor:[UIColor redColor]];

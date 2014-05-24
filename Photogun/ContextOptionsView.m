@@ -22,12 +22,9 @@ static NSString * const defaultRightDescription = @"Right/Max";
 
 @interface ContextOptionsView()
 
-@property (nonatomic, strong) NSDictionary *sliders;
-@property (nonatomic, strong) NSDictionary *rightDescriptions;
-@property (nonatomic, strong) NSDictionary *leftDescriptions;
-
-@property (nonatomic, strong) UIView *topDescriptionView;
-@property (nonatomic, strong) UILabel *topDescription;
+@property (nonatomic, strong) NSMutableDictionary *sliders;
+@property (nonatomic, strong) NSMutableDictionary *rightDescriptions;
+@property (nonatomic, strong) NSMutableDictionary *leftDescriptions;
 
 @property (nonatomic, assign) CGRect originFrame;
 
@@ -91,6 +88,9 @@ static NSString * const defaultRightDescription = @"Right/Max";
             rightDescription.textAlignment = NSTextAlignmentRight;
             rightDescription.text = defaultRightDescription;
             
+            [slider addTarget:self action:@selector(sliderValueChangedAction:)
+                         forControlEvents:UIControlEventValueChanged];
+            
             slider.minimumTrackTintColor = [UIColor colorWithRed:0.14f green:0.14f blue:0.14f alpha:1.0f];
             slider.maximumTrackTintColor = [UIColor whiteColor];
             slider.minimumValue = 0.0f;
@@ -136,6 +136,10 @@ static NSString * const defaultRightDescription = @"Right/Max";
 {
     if (self = [super initWithFrame:frame])
     {
+        self.sliders = [NSMutableDictionary dictionary];
+        self.leftDescriptions = [NSMutableDictionary dictionary];
+        self.rightDescriptions = [NSMutableDictionary dictionary];
+        
         self.originFrame = frame;
         self.hidden = NO;
         self.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:1.0f];
@@ -198,6 +202,28 @@ static NSString * const defaultRightDescription = @"Right/Max";
     [UIView commitAnimations];
 }
 
+- (UILabel *)getRightDescriptionWithName:(NSString *)componentName
+{
+    return (UILabel *)[self.rightDescriptions objectForKey:componentName];
+}
+
+- (UILabel *)getLeftDescriptionWithName:(NSString *)componentName
+{
+    return (UILabel *)[self.leftDescriptions objectForKey:componentName];
+}
+
+- (UISlider *)getSliderWithName:(NSString *)componentName
+{
+    return (UISlider *)[self.sliders objectForKey:componentName];
+}
+
+- (void)sliderValueChangedAction:(UISlider *)sender
+{
+    NSString * sliderName = [self.sliders allKeysForObject:sender][0];
+        
+    if (self.delegate)
+        [self.delegate sliderValueChanged:sliderName];
+}
 
 #pragma mark - Constants for using in other classes
 

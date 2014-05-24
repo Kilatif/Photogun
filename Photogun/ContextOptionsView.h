@@ -8,7 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol SliderValueChangedDelegate;
+
 @interface ContextOptionsView : UIView
+
+@property (nonatomic, strong) UIView *topDescriptionView;
+@property (nonatomic, strong) UILabel *topDescription;
+
+@property (nonatomic, assign) id<SliderValueChangedDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame andComponents:(NSArray *)componentsInfo;
 - (void)show:(BOOL)isVisible;
@@ -25,5 +32,11 @@
 + (NSString *)SLIDER_MAX_VALUE;
 
 + (NSString *)SLIDER_CURRENT_VALUE;
+
+@end
+
+@protocol SliderValueChangedDelegate
+
+- (void)sliderValueChanged:(NSString *)sliderName;
 
 @end
