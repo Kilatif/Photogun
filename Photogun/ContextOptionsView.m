@@ -45,7 +45,8 @@ static NSString * const defaultRightDescription = @"Right/Max";
         int workViewHeight = self.frame.size.height - defaultTopDescriptionViewHeight;
         int midleComponentHeight = ceil(workViewHeight / 2.0);
 
-        midleComponentHeight -= (componentsInfo.count % 2 == 0) ? componentHeight : componentHeight / 2;
+        midleComponentHeight = (componentsInfo.count % 2 == 0) ? midleComponentHeight :
+                                                                 midleComponentHeight - componentHeight / 2;
         
         int i = 0;
         int startHeight = midleComponentHeight - floor(componentsInfo.count / 2.0) * componentHeight + defaultTopDescriptionViewHeight;
@@ -139,11 +140,24 @@ static NSString * const defaultRightDescription = @"Right/Max";
         self.hidden = NO;
         self.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:1.0f];
         self.alpha = 0.8f;
+        self.clipsToBounds = YES;
         
         [self initializeTopDescriptionView];
+        [self initializeSwipe];
     }
     
     return self;
+}
+
+- (void)initializeSwipe
+{
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDown:)];
+    
+    [swipeDown setDirection:UISwipeGestureRecognizerDirectionDown];
+    [swipeDown setCancelsTouchesInView:NO];
+    [swipeDown setEnabled:YES];
+    
+    [self.topDescriptionView addGestureRecognizer:swipeDown];
 }
 
 - (void)initializeTopDescriptionView
@@ -160,6 +174,30 @@ static NSString * const defaultRightDescription = @"Right/Max";
     [self.topDescriptionView addSubview:self.topDescription];
     [self addSubview:self.topDescriptionView];
 }
+
+- (void)swipeDown:(UITapGestureRecognizer *)recognizer
+{
+    [self show:NO];
+}
+
+- (void)show:(BOOL)isVisible
+{
+    float targetHeight = (isVisible) ? self.originFrame.size.height : 0;
+    float targetPosY = (isVisible) ? self.originFrame.origin.y : self.frame.origin.y + self.frame.size.height;
+    
+    CGRect targetRect = CGRectMake(self.frame.origin.x, targetPosY,
+                                   self.frame.size.width, targetHeight);
+    
+    [UIView beginAnimations:nil context:nil];
+    [UIView setAnimationDuration:0.25f];
+    [UIView setAnimationDelay:0.0f];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    
+    self.frame = targetRect;
+    
+    [UIView commitAnimations];
+}
+
 
 #pragma mark - Constants for using in other classes
 

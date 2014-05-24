@@ -43,7 +43,7 @@
                                [ContextOptionsView SLIDER_MAX_COLOR] : [UIColor colorWithRed:0.0f green:0.78f blue:0.78f alpha:1.0f]};
     
     self.shadowsConetxtView = [[ContextOptionsView alloc] initWithFrame:CGRectMake(0, 30, 320, 210)
-                                                          andComponents:@[redValue, greenValue, blueValue]];
+                                                          andComponents:@[redValue, greenValue]];
     [self.view addSubview:self.shadowsConetxtView];
     
    // [self.test setMaximumTrackTintColor:[UIColor redColor]];
@@ -61,36 +61,7 @@
 
 - (IBAction)testSwitch:(UISwitch *)sender
 {
-    if (sender.on)
-    {
-        self.testView.frame = CGRectMake(self.testView.frame.origin.x, 570,
-                                         self.testView.frame.size.width, 0);
-        
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.25f];
-        [UIView setAnimationDelay:0.0f];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-        
-        self.testView.frame = CGRectMake(self.testView.frame.origin.x, 360,
-                                         self.testView.frame.size.width, 210);
-        
-        [UIView commitAnimations];
-    }
-    else
-    {
-        self.testView.frame = CGRectMake(self.testView.frame.origin.x, 360,
-                                         self.testView.frame.size.width, 210);
-        
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.25f];
-        [UIView setAnimationDelay:0.0f];
-        [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
-        
-        self.testView.frame = CGRectMake(self.testView.frame.origin.x, 570,
-                                         self.testView.frame.size.width, 0);
-        
-        [UIView commitAnimations];
-    }
+    [self.shadowsConetxtView show:sender.on];
 }
 
 

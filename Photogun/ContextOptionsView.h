@@ -11,6 +11,7 @@
 @interface ContextOptionsView : UIView
 
 - (id)initWithFrame:(CGRect)frame andComponents:(NSArray *)componentsInfo;
+- (void)show:(BOOL)isVisible;
 
 + (NSString *)COMPONENT_NAME;
 
