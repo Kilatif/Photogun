@@ -72,21 +72,39 @@ static NSString * const defaultRightDescription = @"Right/Max";
             
             NSString *componentName = [curComponent objectForKey:[ContextOptionsView COMPONENT_NAME]];
             
+            UITapGestureRecognizer *tapLeft = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                      action:@selector(returnToDefaultValueTap:)];
+            
+            tapLeft.numberOfTapsRequired = 2;
+            tapLeft.cancelsTouchesInView = NO;
+            
+            UITapGestureRecognizer *tapRight = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                      action:@selector(returnToDefaultValueTap:)];
+            
+            tapRight.numberOfTapsRequired = 2;
+            tapRight.cancelsTouchesInView = NO;
+            
             //creating component objects
             UILabel *leftDescription = [[UILabel alloc] initWithFrame:leftDescriptionFrame];
             UILabel *rightDescription = [[UILabel alloc] initWithFrame:rightDescriptionFrame];
             UISlider *slider = [[UISlider alloc] initWithFrame:sliderFrame];
             
             //seting component objects properties
+            
+            
+            [leftDescription addGestureRecognizer:tapLeft];
             [leftDescription setFont:[UIFont systemFontOfSize:14]];
             leftDescription.textColor = [UIColor whiteColor];
             leftDescription.textAlignment = NSTextAlignmentLeft;
             leftDescription.text = defaultLeftDescription;
+            leftDescription.userInteractionEnabled = YES;
             
+            [rightDescription addGestureRecognizer:tapRight];
             [rightDescription setFont:[UIFont systemFontOfSize:14]];
             rightDescription.textColor = [UIColor whiteColor];
             rightDescription.textAlignment = NSTextAlignmentRight;
             rightDescription.text = defaultRightDescription;
+            rightDescription.userInteractionEnabled = YES;
             
             [slider addTarget:self action:@selector(sliderValueChangedAction:)
                          forControlEvents:UIControlEventValueChanged];
@@ -155,6 +173,7 @@ static NSString * const defaultRightDescription = @"Right/Max";
 
 - (void)initializeSwipe
 {
+    
     UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeDown:)];
     
     [swipeDown setDirection:UISwipeGestureRecognizerDirectionDown];
@@ -179,9 +198,21 @@ static NSString * const defaultRightDescription = @"Right/Max";
     [self addSubview:self.topDescriptionView];
 }
 
-- (void)swipeDown:(UITapGestureRecognizer *)recognizer
+- (void)swipeDown:(UISwipeGestureRecognizer *)recognizer
 {
     [self show:NO animated:YES];
+}
+
+- (void)returnToDefaultValueTap:(UITapGestureRecognizer *)recognizer
+{
+    NSArray *leftDescriptionsKeys = [self.leftDescriptions allKeysForObject:recognizer.view];
+    NSArray *rightDescriptionsKeys = [self.rightDescriptions allKeysForObject:recognizer.view];
+    
+    NSString *componentName = (leftDescriptionsKeys.count) ? leftDescriptionsKeys[0] : rightDescriptionsKeys[0];
+    UISlider *slider = [self getSliderWithName:componentName];
+    
+    slider.value = 1.0f;
+    [self sliderValueChangedAction:slider];
 }
 
 - (void)show:(BOOL)isVisible animated:(BOOL)isAnimated

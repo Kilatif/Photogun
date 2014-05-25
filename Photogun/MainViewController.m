@@ -282,7 +282,8 @@ static  NSString * const valueIntensity = @"valueIntensity";
 
 - (void)imageCaptured:(UIImage *)capturedImage
 {
-    
+    [self.videoCapture stopCapture];
+    [self.imageView loadImageWithImage:capturedImage];
 }
 
 #pragma mark - UIComponents actions
@@ -291,11 +292,10 @@ static  NSString * const valueIntensity = @"valueIntensity";
 {
     [self.filtersSelectSheet showInView:self.view];
 }
-- (IBAction)test:(UISlider *)sender {
-    sender.value = 0.5f;
-}
-- (IBAction)test2:(id)sender {
-    NSLog(@"test2");
+
+- (IBAction)takePhotoSave:(UIButton *)sender
+{
+    [self.videoCapture captureImage];
 }
 
 @end

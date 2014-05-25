@@ -47,14 +47,6 @@
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </imageView>
-                                    <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ClM-hZ-phb">
-                                        <rect key="frame" x="120" y="314" width="118" height="31"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <connections>
-                                            <action selector="test2:" destination="CYq-S4-4Pf" eventType="valueChanged" id="8w9-St-fSX"/>
-                                            <action selector="test:" destination="CYq-S4-4Pf" eventType="touchDownRepeat" id="UT6-HW-H6w"/>
-                                        </connections>
-                                    </slider>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -64,6 +56,9 @@
                                 <state key="normal" title="Button" image="ic_camera.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="takePhotoSave:" destination="CYq-S4-4Pf" eventType="touchDown" id="qCJ-5M-l8E"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Adq-v1-buv">
                                 <rect key="frame" x="235" y="482" width="45" height="45"/>
@@ -92,11 +87,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lgf-fw-yZG" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer cancelsTouchesInView="NO" direction="down" id="Nhu-2k-SDT">
-                    <connections>
-                        <action selector="testSwipe:" destination="CYq-S4-4Pf" id="Fns-mG-nat"/>
-                    </connections>
-                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-302" y="-789"/>
         </scene>
