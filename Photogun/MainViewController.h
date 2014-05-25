@@ -18,11 +18,13 @@
 
 @property (strong, nonatomic) IBOutlet OpenGLView *imageView;
 @property (strong, nonatomic) IBOutlet HistogramImageView *imageHisto;
+@property (strong, nonatomic) IBOutlet UIButton *photoSaveButton;
 
 @property (strong, nonatomic) ContextOptionsView *activeFilterView;
 @property (nonatomic, strong) UIActionSheet *filtersSelectSheet;
 @property (nonatomic, strong) VideoCapture *videoCapture;
-@property (nonatomic, assign) HistogramType histogramType;
-@property (nonatomic, assign) NSInteger activeFilterViewType;
+
+@property (strong, nonatomic) IBOutlet UIImageView *test;
+
 
 @end

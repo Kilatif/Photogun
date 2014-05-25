@@ -19,6 +19,11 @@ enum
     FilterVignette
 };
 
+typedef enum : NSUInteger {
+    CaptureImage,
+    CapturePreview
+} CaptureType;
+
 static CGFloat const activeFilterViewHeight = 210;
 
 static  NSString * const valueBrightness = @"valueBrightness";
@@ -41,7 +46,9 @@ static  NSString * const valueIntensity = @"valueIntensity";
 
 @interface MainViewController ()
 
-@property (nonatomic, strong) ContextOptionsView *shadowsConetxtView;
+@property (nonatomic, assign) HistogramType histogramType;
+@property (nonatomic, assign) NSInteger activeFilterViewType;
+@property (nonatomic, assign) CaptureType currentCaptureType;
 
 @end
 
@@ -53,6 +60,7 @@ static  NSString * const valueIntensity = @"valueIntensity";
     
     [self initializeActionSheet];
     
+    self.currentCaptureType = CapturePreview;
     self.imageHisto.alpha = 0.7f;
     self.imageView.delegate = self;
     
@@ -316,6 +324,17 @@ static  NSString * const valueIntensity = @"valueIntensity";
 {
     [self.videoCapture stopCapture];
     [self.imageView loadImageWithImage:capturedImage];
+    
+    self.photoSaveButton.enabled = YES;
+}
+
+- (void)savedImage:(UIImage *)image didFinishSavingWithError:(NSError *)error
+                                                 contextInfo:(void *)contextInfo;
+
+{
+    [self.videoCapture startCapture];
+    
+    self.photoSaveButton.enabled = YES;
 }
 
 #pragma mark - UIComponents actions
@@ -327,7 +346,22 @@ static  NSString * const valueIntensity = @"valueIntensity";
 
 - (IBAction)takePhotoSave:(UIButton *)sender
 {
-    [self.videoCapture captureImage];
+    if (self.currentCaptureType == CapturePreview)
+    {
+        self.currentCaptureType = CaptureImage;
+        self.photoSaveButton.enabled = NO;
+        [self.videoCapture captureImage];
+    }
+    else
+    {
+        self.currentCaptureType = CapturePreview;
+       // self.photoSaveButton.enabled = NO;
+        
+        [self.test setImage:[self.imageView getGLFrameImage]];
+        
+        //UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], self,
+       //                                @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
+    }
 }
 
 @end

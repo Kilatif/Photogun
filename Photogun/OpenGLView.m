@@ -451,7 +451,7 @@ VertexData vertices[] = {
 
 - (UIImage *)getGLFrameImage
 {
-    CGRect imageRect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
+    CGRect imageRect = CGRectMake(0, 0, self.resolution.width, self.resolution.height);
     return [self getGLFrameImageWithRect:imageRect];
 }
 
