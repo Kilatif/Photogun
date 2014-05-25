@@ -10,6 +10,7 @@
 
 #define SQUARE_SIZE 0
 #define SHADER_LOGS 1
+#define FILTERS_COUNT 19
 
 static NSString * const VERTEX_SHADER_NAME = @"Filters";
 static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
@@ -17,8 +18,8 @@ static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
 static NSString * const SHADER_TYPE_FRAGMENT = @"fsh";
 static NSString * const SHADER_TYPE_VERTEX = @"vsh";
 
-float filtersValues[15];
-int filtersOrder[15];
+float filtersValues[FILTERS_COUNT];
+int filtersOrder[FILTERS_COUNT];
 
 typedef struct
 {
@@ -55,7 +56,7 @@ VertexData vertices[] = {
     self = [super initWithCoder:aDecoder];
     if (self)
     {
-        for(int i = 0; i < 15; i++)
+        for(int i = 0; i < FILTERS_COUNT; i++)
         {
             filtersOrder[i] = -1;
             filtersValues[i] = 1;
@@ -74,7 +75,7 @@ VertexData vertices[] = {
         [self initializeScene];
         [self prepareScene];
         
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < FILTERS_COUNT; i++)
             filtersOrder[i] = i;
         
         GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
@@ -483,15 +484,18 @@ VertexData vertices[] = {
 
 #pragma mark - Other functions
 
+- (float)getFilterValueWithType:(int)type
+{
+    return filtersValues[type];
+}
+
 - (void)setFilterValue:(float)value withType:(int)type
 {
     filtersValues[type] = value;
     
     GLuint filtersValuesUniforim = glGetUniformLocation(_shaderProgramID, "filters_values");
-    //GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
     
     glUniform1fv(filtersValuesUniforim, 15, filtersValues);
-    //glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
     
     glUniform1f(glGetUniformLocation(_shaderProgramID, "filter_value"), value);
     glUniform1i(glGetUniformLocation(_shaderProgramID, "filter_id"), type);

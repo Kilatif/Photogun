@@ -44,6 +44,7 @@ typedef enum : NSUInteger {
 
 - (NSArray *)histogramFromGLViewWithType:(HistogramType)histogramType;
 
+- (float)getFilterValueWithType:(int)type;
 - (void)setFilterValue:(float)value withType:(int)type;
 
 @end

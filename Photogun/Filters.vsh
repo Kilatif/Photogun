@@ -2,15 +2,15 @@
 #define GREEN_COLOR_TYPE    1
 #define BLUE_COLOR_TYPE     2
 
-#define CONTRAST_FILTER_TYPE            0
-#define SATURATION_FILTER_TYPE          1
-#define BRIGHTNESS_FILTER_TYPE          2
+#define BRIGHTNESS_FILTER_TYPE          0
+#define CONTRAST_FILTER_TYPE            1
+#define SATURATION_FILTER_TYPE          2
 
 #define EXPOSITION_FILTER_TYPE          3
 #define GAMMA_CORRECTION_FILTER_TYPE    4
 
-#define BALANCE_MIDTONES_FILTER_TYPE    5
-#define BALANCE_SHADOWS_FILTER_TYPE     8
+#define BALANCE_SHADOWS_FILTER_TYPE      5
+#define BALANCE_MIDTONES_FILTER_TYPE     8
 #define BALANCE_LIGHTS_FILTER_TYPE      11
 
 #define BLUR_FILTER_TYPE                14

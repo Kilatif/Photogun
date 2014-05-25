@@ -18,7 +18,11 @@
 @property (nonatomic, assign) id<SliderValueChangedDelegate> delegate;
 
 - (id)initWithFrame:(CGRect)frame andComponents:(NSArray *)componentsInfo;
-- (void)show:(BOOL)isVisible;
+
+- (void)show:(BOOL)isVisible animated:(BOOL)isAnimated;
+- (UILabel *)getRightDescriptionWithName:(NSString *)componentName;
+- (UILabel *)getLeftDescriptionWithName:(NSString *)componentName;
+- (UISlider *)getSliderWithName:(NSString *)componentName;
 
 + (NSString *)COMPONENT_NAME;
 

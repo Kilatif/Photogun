@@ -91,8 +91,8 @@ static NSString * const defaultRightDescription = @"Right/Max";
             [slider addTarget:self action:@selector(sliderValueChangedAction:)
                          forControlEvents:UIControlEventValueChanged];
             
-            slider.minimumTrackTintColor = [UIColor colorWithRed:0.14f green:0.14f blue:0.14f alpha:1.0f];
-            slider.maximumTrackTintColor = [UIColor whiteColor];
+            slider.maximumTrackTintColor = [UIColor colorWithRed:0.25f green:0.25f blue:0.25f alpha:1.0f];
+            slider.minimumTrackTintColor = [UIColor whiteColor];
             slider.minimumValue = 0.0f;
             slider.maximumValue = 2.0f;
             slider.value = 1.0f;
@@ -181,10 +181,10 @@ static NSString * const defaultRightDescription = @"Right/Max";
 
 - (void)swipeDown:(UITapGestureRecognizer *)recognizer
 {
-    [self show:NO];
+    [self show:NO animated:YES];
 }
 
-- (void)show:(BOOL)isVisible
+- (void)show:(BOOL)isVisible animated:(BOOL)isAnimated
 {
     float targetHeight = (isVisible) ? self.originFrame.size.height : 0;
     float targetPosY = (isVisible) ? self.originFrame.origin.y : self.frame.origin.y + self.frame.size.height;
@@ -192,14 +192,18 @@ static NSString * const defaultRightDescription = @"Right/Max";
     CGRect targetRect = CGRectMake(self.frame.origin.x, targetPosY,
                                    self.frame.size.width, targetHeight);
     
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:0.25f];
-    [UIView setAnimationDelay:0.0f];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    if (isAnimated)
+    {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.25f];
+        [UIView setAnimationDelay:0.0f];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+    }
     
     self.frame = targetRect;
     
-    [UIView commitAnimations];
+    if (isAnimated)
+        [UIView commitAnimations];
 }
 
 - (UILabel *)getRightDescriptionWithName:(NSString *)componentName
@@ -220,7 +224,7 @@ static NSString * const defaultRightDescription = @"Right/Max";
 - (void)sliderValueChangedAction:(UISlider *)sender
 {
     NSString * sliderName = [self.sliders allKeysForObject:sender][0];
-        
+    
     if (self.delegate)
         [self.delegate sliderValueChanged:sliderName];
 }

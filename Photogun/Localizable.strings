@@ -1,0 +1,32 @@
+"option.azure" = "Azure";
+"option.red" = "Red";
+"option.purple" = "Purple";
+"option.green" = "Green";
+"option.yellow" = "Yellow";
+"option.blue" = "Blue";
+
+"option.brightness" = "Brightness";
+"option.contrast" = "Contrast";
+"option.saturation" = "Saturation";
+
+"option.exposure" = "Exposure";
+"option.gammaCorrect" = "Gamma Corection";
+
+"option.blur" = "Blur Value";
+
+"option.outerRadius" = "Outer Radius";
+"option.interRadius" = "Inter Radius";
+"option.intensity" = "Intensity";
+
+"title.brightContrast" = "Brightness/Contrast/Saturation";
+"title.expoisGamma" = "Exposure/Gamma Correction";
+
+"title.balanceShadows" = "Color Balance (Shadows)";
+"title.balanceMidtones" = "Color Balance (Midtones)";
+"title.balanceLights" = "Color Balance (Lights)";
+
+"title.blur" = "Blur";
+"title.vignette" = "Vignette";
+
+"title.filters" = "Filters";
+"title.cancel" = "Cancel";
