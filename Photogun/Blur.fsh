@@ -39,9 +39,6 @@ vec4 horisontalBlur(int coef)
         
         sum += texture2D(texture, vec2(tex_coord_frag.x, tex_coord_frag.y - offset_l)) * persent_l;
         sum += texture2D(texture, vec2(tex_coord_frag.x, tex_coord_frag.y + offset_r)) * persent_r;
-        
-        //sum += texture2D(texture, vec2(tex_coord_frag.x - offset_l, tex_coord_frag.y)) * persent_l /2.0;
-        //sum += texture2D(texture, vec2(tex_coord_frag.x + offset_r, tex_coord_frag.y)) * persent_r /2.0;
     }
     
     float persent = (float(coef) * d + a) / 100.0;

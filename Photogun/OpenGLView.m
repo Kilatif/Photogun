@@ -10,7 +10,7 @@
 
 #define SQUARE_SIZE 0
 #define SHADER_LOGS 1
-#define FILTERS_COUNT 19
+#define FILTERS_COUNT 17
 
 static NSString * const VERTEX_SHADER_NAME = @"Filters";
 static NSString * const FRAGMENT_SHADE_NAME = @"Contrast";
@@ -62,6 +62,11 @@ VertexData vertices[] = {
             filtersValues[i] = 1;
         }
         
+        //Vignette filter must ne zero by default
+        filtersValues[14] = 0.0f;
+        filtersValues[15] = 0.0f;
+        filtersValues[16] = 0.0f;
+        
         self.resolution = self.frame.size;
         
         self.eaglLayer = (CAEAGLLayer*) self.layer;
@@ -79,7 +84,7 @@ VertexData vertices[] = {
             filtersOrder[i] = i;
         
         GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
-        glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
+        glUniform1iv(filtersOrderUniforim, FILTERS_COUNT, filtersOrder);
     }
     
     return self;
@@ -117,8 +122,8 @@ VertexData vertices[] = {
     GLuint filtersValuesUniforim = glGetUniformLocation(_shaderProgramID, "filters_values");
     GLuint filtersOrderUniforim = glGetUniformLocation(_shaderProgramID, "filters_order");
     
-    glUniform1fv(filtersValuesUniforim, 15, filtersValues);
-    glUniform1iv(filtersOrderUniforim, 15, filtersOrder);
+    glUniform1fv(filtersValuesUniforim, FILTERS_COUNT, filtersValues);
+    glUniform1iv(filtersOrderUniforim, FILTERS_COUNT, filtersOrder);
 }
 
 - (void)render
@@ -495,10 +500,11 @@ VertexData vertices[] = {
     
     GLuint filtersValuesUniforim = glGetUniformLocation(_shaderProgramID, "filters_values");
     
-    glUniform1fv(filtersValuesUniforim, 15, filtersValues);
+    glUniform1fv(filtersValuesUniforim, FILTERS_COUNT, filtersValues);
     
-    glUniform1f(glGetUniformLocation(_shaderProgramID, "filter_value"), value);
-    glUniform1i(glGetUniformLocation(_shaderProgramID, "filter_id"), type);
+    
+  //  glUniform1f(glGetUniformLocation(_shaderProgramID, "filter_value"), value);
+   // glUniform1i(glGetUniformLocation(_shaderProgramID, "filter_id"), type);
     
     if (self.isFrameFreeze)
         [self render];

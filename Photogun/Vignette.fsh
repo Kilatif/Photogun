@@ -20,3 +20,15 @@ void main()
     
     gl_FragColor = color;
 }
+
+vec4 vignette(vec4 oldColor, float outerRadius, float interRadius, float intensity)
+{
+    vec2 u_resolution = vec2(300.0, 400.0);
+    
+    vec2 relativePosition = gl_FragCoord.xy / u_resolution - 0.5;
+    float len = length(relativePosition);
+    float vignette = smoothstep(outerRadius, innterRadius, len);
+    oldColor.rgb = mix(oldColor.rgb, oldColor.rgb * vignette, intensity);
+    
+    return oldColor;
+}

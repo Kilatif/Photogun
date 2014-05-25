@@ -4,17 +4,16 @@
 
 #define BRIGHTNESS_FILTER_TYPE          0
 #define CONTRAST_FILTER_TYPE            1
-#define SATURATION_FILTER_TYPE          2
 
-#define EXPOSITION_FILTER_TYPE          3
-#define GAMMA_CORRECTION_FILTER_TYPE    4
+#define EXPOSITION_FILTER_TYPE          2
+#define GAMMA_CORRECTION_FILTER_TYPE    3
 
-#define BALANCE_SHADOWS_FILTER_TYPE      5
-#define BALANCE_MIDTONES_FILTER_TYPE     8
-#define BALANCE_LIGHTS_FILTER_TYPE      11
+#define BALANCE_SHADOWS_FILTER_TYPE      4
+#define BALANCE_MIDTONES_FILTER_TYPE     7
+#define BALANCE_LIGHTS_FILTER_TYPE      10
 
-#define BLUR_FILTER_TYPE                14
-#define VIGNETTE_FILTER_TYPE            15
+#define BLUR_FILTER_TYPE                13
+#define VIGNETTE_FILTER_TYPE            14
 
 struct coef {
     vec3 add;
@@ -26,8 +25,8 @@ attribute highp vec4 color;
 attribute vec2 tex_coord;
 
 uniform mat4 projection;
-uniform float filters_values[15];
-uniform int filters_order[15];
+uniform float filters_values[17];
+uniform int filters_order[17];
 
 varying vec4 color_frag;
 varying vec2 tex_coord_frag;
@@ -58,7 +57,6 @@ void main()
     color_frag = color;
     tex_coord_frag = tex_coord;
     
-    //coef tempCoef = getCoefsForFilter(BALANCE_SHADOWS_FILTER_TYPE, filters_values[0]);
     coef tempCoef = getCoefsForFilters();
     
     coefs_R = vec2(tempCoef.add.r, tempCoef.main.r);
@@ -76,7 +74,7 @@ coef getCoefsForFilters()
     filtersCoef.add = vec3(0.0);
     filtersCoef.main = vec3(1.0);
     
-    for (int i = 0; i < 15; i++)
+    for (int i = 0; i < 17; i++)
     {
         if (filters_order[i] >= 0)
         {
@@ -98,9 +96,6 @@ coef getCoefsForFilter(int filterType, float filterValue)
     
     if (filterType == CONTRAST_FILTER_TYPE)
         result = contrast(unitVector, filterValue);
-    
-    else if (filterType == SATURATION_FILTER_TYPE)
-        result = saturation(unitVector, filterValue);
     
     else if (filterType == BRIGHTNESS_FILTER_TYPE)
         result = brightness(unitVector, filterValue);
@@ -198,7 +193,7 @@ coef saturation(vec3 oldColor, float saturationValue)
     
     vec3 lumCoeff = vec3(0.2155, 0.7154, 0.0721);
     vec3 intensity = vec3(dot(oldColor, lumCoeff));
-    
+   
     coef result;
     vec3 filterResult = mix(intensity, oldColor, saturationValue);
     

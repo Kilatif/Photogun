@@ -23,7 +23,7 @@ static CGFloat const activeFilterViewHeight = 210;
 
 static  NSString * const valueBrightness = @"valueBrightness";
 static  NSString * const valueContrast = @"valueContrast";
-static  NSString * const valueSaturation = @"valueSaturation";
+//static  NSString * const valueSaturation = @"valueSaturation";
 
 static  NSString * const valueRed = @"valueRed";
 static  NSString * const valueGreen = @"valueGreen";
@@ -70,7 +70,7 @@ static  NSString * const valueIntensity = @"valueIntensity";
                                                  cancelButtonTitle:NSLocalizedString(@"title.cancel", nil)
                                             destructiveButtonTitle:nil
                                                  otherButtonTitles:NSLocalizedString(@"title.brightContrast", nil),
-                                                                   NSLocalizedString(@"title.expoisGamma", nil),
+                                                                   NSLocalizedString(@"title.exposureGamma", nil),
                                                                    NSLocalizedString(@"title.balanceShadows", nil),
                                                                    NSLocalizedString(@"title.balanceMidtones", nil),
                                                                    NSLocalizedString(@"title.balanceLights", nil),
@@ -95,12 +95,7 @@ static  NSString * const valueIntensity = @"valueIntensity";
                                [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
                                [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:1])};
     
-    NSDictionary *saturation = @{[ContextOptionsView COMPONENT_NAME] : valueSaturation,
-                                 [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.saturation", nil),
-                                 [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                                 [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:2])};
-    
-    return @[brightness, contrast, saturation];
+    return @[brightness, contrast];
 }
 
 - (NSArray *)componentsForExposureGammaFilter
@@ -108,12 +103,12 @@ static  NSString * const valueIntensity = @"valueIntensity";
     NSDictionary *exposure = @{[ContextOptionsView COMPONENT_NAME] : valueExposure,
                                [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.exposure", nil),
                                [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                               [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:3])};
+                               [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:2])};
     
     NSDictionary *gamma = @{[ContextOptionsView COMPONENT_NAME] : valueGamma,
                             [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.gammaCorrect", nil),
                             [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                            [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:4])};
+                            [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:3])};
     
     return @[exposure, gamma];
 }
@@ -149,7 +144,9 @@ static  NSString * const valueIntensity = @"valueIntensity";
     NSDictionary *blur = @{[ContextOptionsView COMPONENT_NAME] : valueBlur,
                            [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.blur", nil),
                            [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                           [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:14])};
+                           [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:13]),
+                           [ContextOptionsView SLIDER_MIN_VALUE] : @(1),
+                           [ContextOptionsView SLIDER_MAX_VALUE] : @(10)};
     
     return @[blur];
 }
@@ -157,19 +154,25 @@ static  NSString * const valueIntensity = @"valueIntensity";
 - (NSArray *)componentsForVignetteFilter
 {
     NSDictionary *outerRadius = @{[ContextOptionsView COMPONENT_NAME] : valueOuterRadius,
-                                  [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.outerRarius", nil),
+                                  [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.outerRadius", nil),
                                   [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                                  [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:15])};
+                                  [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:14]),
+                                  [ContextOptionsView SLIDER_MIN_VALUE] : @(0),
+                                  [ContextOptionsView SLIDER_MAX_VALUE] : @(1)};
     
     NSDictionary *interRadius = @{[ContextOptionsView COMPONENT_NAME] : valueInterRadius,
-                                  [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.interRarius", nil),
+                                  [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.interRadius", nil),
                                   [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                                  [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:16])};
+                                  [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:15]),
+                                  [ContextOptionsView SLIDER_MIN_VALUE] : @(0),
+                                  [ContextOptionsView SLIDER_MAX_VALUE] : @(1)};
     
     NSDictionary *intensity = @{[ContextOptionsView COMPONENT_NAME] : valueIntensity,
                                 [ContextOptionsView LEFT_DESCRIPTION_VALUE] : NSLocalizedString(@"option.intensity", nil),
                                 [ContextOptionsView RIGHT_DESCRIPTION_VALUE] : @"",
-                                [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:17])};
+                                [ContextOptionsView SLIDER_CURRENT_VALUE] : @([self.imageView getFilterValueWithType:16]),
+                                [ContextOptionsView SLIDER_MIN_VALUE] : @(0),
+                                [ContextOptionsView SLIDER_MAX_VALUE] : @(1)};
     
     return @[outerRadius, interRadius, intensity];
 }
@@ -180,15 +183,43 @@ static  NSString * const valueIntensity = @"valueIntensity";
 {
     self.activeFilterViewType = buttonIndex;
     NSArray *optionsFilterComponents = nil;
+    NSString *topDescriptionText = @"";
     
     switch (buttonIndex) {
-        case FilterBrightnessContrast: optionsFilterComponents = [self componentsForBrightContrastFilter]; break;
-        case FilterExposureGamma: optionsFilterComponents = [self componentsForExposureGammaFilter]; break;
-        case FilterBalanceShadow: optionsFilterComponents = [self componentsForBalanceFilters:5]; break;
-        case FilterBalanceMidtones: optionsFilterComponents = [self componentsForBalanceFilters:8]; break;
-        case FilterBalanceLights: optionsFilterComponents = [self componentsForBalanceFilters:11]; break;
-        case FilterBlur: optionsFilterComponents = [self componentsForBlurFilter]; break;
-        case FilterVignette: optionsFilterComponents = [self componentsForVignetteFilter]; break;
+        case FilterBrightnessContrast:
+            optionsFilterComponents = [self componentsForBrightContrastFilter];
+            topDescriptionText = NSLocalizedString(@"title.brightContrast", nil);
+            break;
+            
+        case FilterExposureGamma:
+            optionsFilterComponents = [self componentsForExposureGammaFilter];
+            topDescriptionText = NSLocalizedString(@"title.exposureGamma", nil);
+            break;
+            
+        case FilterBalanceShadow:
+            optionsFilterComponents = [self componentsForBalanceFilters:4];
+            topDescriptionText = NSLocalizedString(@"title.balanceShadows", nil);
+            break;
+            
+        case FilterBalanceMidtones:
+            optionsFilterComponents = [self componentsForBalanceFilters:7];
+            topDescriptionText = NSLocalizedString(@"title.balanceMidtones", nil);
+            break;
+            
+        case FilterBalanceLights:
+            optionsFilterComponents = [self componentsForBalanceFilters:10];
+            topDescriptionText = NSLocalizedString(@"title.balanceLights", nil);
+            break;
+            
+        case FilterBlur:
+            optionsFilterComponents = [self componentsForBlurFilter];
+            topDescriptionText = NSLocalizedString(@"title.blur", nil);
+            break;
+            
+        case FilterVignette:
+            optionsFilterComponents = [self componentsForVignetteFilter];
+            topDescriptionText = NSLocalizedString(@"title.vignette", nil);
+            break;
             
         default:
             break;
@@ -204,6 +235,7 @@ static  NSString * const valueIntensity = @"valueIntensity";
                                                             andComponents:optionsFilterComponents];
 
         self.activeFilterView.delegate = self;
+        self.activeFilterView.topDescription.text = topDescriptionText;
         [self.view addSubview:self.activeFilterView];
         [self.activeFilterView show:NO animated:NO];
         [self.activeFilterView show:YES animated:YES];
@@ -231,53 +263,53 @@ static  NSString * const valueIntensity = @"valueIntensity";
     if ([sliderName isEqualToString:valueContrast])
         [self.imageView setFilterValue:slider.value withType:1];
     
-    if ([sliderName isEqualToString:valueSaturation])
+    if ([sliderName isEqualToString:valueExposure])
         [self.imageView setFilterValue:slider.value withType:2];
     
-    if ([sliderName isEqualToString:valueExposure])
+    if ([sliderName isEqualToString:valueGamma])
         [self.imageView setFilterValue:slider.value withType:3];
     
-    if ([sliderName isEqualToString:valueGamma])
+    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueRed])
         [self.imageView setFilterValue:slider.value withType:4];
     
-    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueRed])
+    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueGreen])
         [self.imageView setFilterValue:slider.value withType:5];
     
-    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueGreen])
+    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueBlue])
         [self.imageView setFilterValue:slider.value withType:6];
     
-    if ((self.activeFilterViewType == FilterBalanceShadow) && [sliderName isEqualToString:valueBlue])
+    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueRed])
         [self.imageView setFilterValue:slider.value withType:7];
     
-    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueRed])
+    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueGreen])
         [self.imageView setFilterValue:slider.value withType:8];
     
-    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueGreen])
+    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueBlue])
         [self.imageView setFilterValue:slider.value withType:9];
     
-    if ((self.activeFilterViewType == FilterBalanceMidtones) && [sliderName isEqualToString:valueBlue])
+    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueRed])
         [self.imageView setFilterValue:slider.value withType:10];
     
-    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueRed])
+    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueGreen])
         [self.imageView setFilterValue:slider.value withType:11];
     
-    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueGreen])
+    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueBlue])
         [self.imageView setFilterValue:slider.value withType:12];
     
-    if ((self.activeFilterViewType == FilterBalanceLights) && [sliderName isEqualToString:valueBlue])
+    if ([sliderName isEqualToString:valueBlur])
         [self.imageView setFilterValue:slider.value withType:13];
     
-    if ([sliderName isEqualToString:valueBlur])
+    if ([sliderName isEqualToString:valueOuterRadius])
         [self.imageView setFilterValue:slider.value withType:14];
     
-    if ([sliderName isEqualToString:valueOuterRadius])
+    if ([sliderName isEqualToString:valueInterRadius])
         [self.imageView setFilterValue:slider.value withType:15];
     
-    if ([sliderName isEqualToString:valueInterRadius])
+    if ([sliderName isEqualToString:valueIntensity])
         [self.imageView setFilterValue:slider.value withType:16];
     
-    if ([sliderName isEqualToString:valueIntensity])
-        [self.imageView setFilterValue:slider.value withType:17];
+    if (!self.imageHisto.hidden)
+        [self.imageHisto setHistogramImageWithData:[self.imageView getGLFramePixelData]];
 }
 
 - (void)imageCaptured:(UIImage *)capturedImage

@@ -7,7 +7,6 @@
 
 "option.brightness" = "Brightness";
 "option.contrast" = "Contrast";
-"option.saturation" = "Saturation";
 
 "option.exposure" = "Exposure";
 "option.gammaCorrect" = "Gamma Corection";
@@ -18,8 +17,8 @@
 "option.interRadius" = "Inter Radius";
 "option.intensity" = "Intensity";
 
-"title.brightContrast" = "Brightness/Contrast/Saturation";
-"title.expoisGamma" = "Exposure/Gamma Correction";
+"title.brightContrast" = "Brightness/Contrast";
+"title.exposureGamma" = "Exposure/Gamma Correction";
 
 "title.balanceShadows" = "Color Balance (Shadows)";
 "title.balanceMidtones" = "Color Balance (Midtones)";
