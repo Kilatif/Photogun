@@ -355,12 +355,12 @@ static  NSString * const valueIntensity = @"valueIntensity";
     else
     {
         self.currentCaptureType = CapturePreview;
-       // self.photoSaveButton.enabled = NO;
+        self.photoSaveButton.enabled = NO;
         
         [self.test setImage:[self.imageView getGLFrameImage]];
         
-        //UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], self,
-       //                                @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
+        UIImageWriteToSavedPhotosAlbum([self.imageView getGLFrameImage], self,
+                                       @selector(savedImage:didFinishSavingWithError:contextInfo:), nil);
     }
 }
 
